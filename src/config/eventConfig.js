@@ -18,10 +18,10 @@ export const EVENT_CONFIG = {
   isoEnd: '2026-11-12T13:00:00+05:00',
 
   // Venue
-  venueName: 'Governor House, Karachi',
-  venueAddress: 'Governor House, Karachi, Pakistan',
+  venueName: 'Governor Hall, Karachi',
+  venueAddress: 'Governor Hall, Karachi, Pakistan',
   googleMapsUrl:
-    'https://www.google.com/maps/search/?api=1&query=Governor+House+Karachi',
+    'https://www.google.com/maps/search/?api=1&query=Governor+Hall+Karachi',
 
   // Genuine Supplied Institutional Logos (in required order)
   logos: [
