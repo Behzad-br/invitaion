@@ -6,7 +6,7 @@
  * instant Mute / Unmute control at the top of the screen.
  */
 
-const TARGET_LOW_VOLUME = 0.14 // Gentle low background volume ("low voice")
+const TARGET_LOW_VOLUME = 0.11 // Gentle low background volume ("slow voice")
 
 class BackgroundMusicController {
   constructor() {
@@ -18,7 +18,7 @@ class BackgroundMusicController {
   ensureAudio() {
     if (typeof window === 'undefined') return null
     if (!this.audio) {
-      const el = new Audio('/audio/background-music.mp3')
+      const el = new Audio('/audio/sitar-ceremony.mp3')
       el.loop = true
       el.preload = 'auto'
       el.playsInline = true
