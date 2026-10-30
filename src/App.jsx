@@ -37,38 +37,69 @@ export default function App() {
     [organizerOverride]
   )
 
-  const handleStartMusic = useCallback(async () => {
-    if (userMutedRef.current) return
-    const started = await ceremonialAudio.start()
-    if (started) {
-      setIsMusicPlaying(true)
+  // Keep UI state synced with actual HTML5 <audio> playback state
+  useEffect(() => {
+    const unsubscribe = ceremonialAudio.subscribe((playing) => {
+      setIsMusicPlaying(playing)
+    })
+    return unsubscribe
+  }, [])
+
+  // Attempt automatic low-volume music start as soon as the link opens;
+  // if blocked by mobile browser autoplay policy, unlock immediately on first touch/tap
+  useEffect(() => {
+    ceremonialAudio.ensureAudio()
+    ceremonialAudio.start()
+
+    const unlockOnFirstGesture = (e) => {
+      if (userMutedRef.current) return
+      if (
+        e &&
+        e.target &&
+        typeof e.target.closest === 'function' &&
+        e.target.closest('[data-music-toggle="true"]')
+      ) {
+        return
+      }
+      if (!ceremonialAudio.isPlaying()) {
+        ceremonialAudio.start()
+      }
+    }
+
+    const events = ['pointerdown', 'touchstart', 'click', 'keydown']
+    events.forEach((evt) =>
+      window.addEventListener(evt, unlockOnFirstGesture, { passive: true })
+    )
+
+    return () => {
+      events.forEach((evt) =>
+        window.removeEventListener(evt, unlockOnFirstGesture)
+      )
     }
   }, [])
 
+  const handleStartMusic = useCallback(async () => {
+    if (userMutedRef.current) return
+    await ceremonialAudio.start()
+  }, [])
+
   const handleToggleMusic = useCallback(async () => {
-    if (isMusicPlaying) {
+    if (ceremonialAudio.isPlaying()) {
       userMutedRef.current = true
       ceremonialAudio.stop()
-      setIsMusicPlaying(false)
     } else {
       userMutedRef.current = false
-      const started = await ceremonialAudio.start()
-      if (started) {
-        setIsMusicPlaying(true)
-      }
+      await ceremonialAudio.start()
     }
-  }, [isMusicPlaying])
+  }, [])
 
   // Politely pause music when switching to WhatsApp or another browser tab
   useEffect(() => {
     const onVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
         ceremonialAudio.stop()
-        setIsMusicPlaying(false)
-      } else if (!userMutedRef.current && !showEnvelope) {
-        ceremonialAudio.start().then((ok) => {
-          if (ok) setIsMusicPlaying(true)
-        })
+      } else if (!userMutedRef.current) {
+        ceremonialAudio.start()
       }
     }
 
@@ -77,7 +108,7 @@ export default function App() {
       document.removeEventListener('visibilitychange', onVisibilityChange)
       ceremonialAudio.stop()
     }
-  }, [showEnvelope])
+  }, [])
 
   // Allow discreet `?setup=1` shortcut for WAEN organizers
   useEffect(() => {
@@ -167,7 +198,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-lavender-soft via-lavender/65 to-lavender-soft py-0 sm:py-8 md:py-12 px-0 sm:px-4">
-      {/* Floating Music Mute / Unmute Control */}
+      {/* Top-Right Music Off / On Toggle */}
       <MusicToggle isPlaying={isMusicPlaying} onToggle={handleToggleMusic} />
 
       {/* Desktop Surrounding Soft Ambient Glow */}
