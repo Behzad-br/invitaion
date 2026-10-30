@@ -1,27 +1,27 @@
 /**
  * Official Event & Brand Configuration
- * Western Australian Curriculum — Karachi Launching Ceremony 2026
+ * Western Australian Curriculum — Karachi Launch Ceremony 2026
  */
 
 export const EVENT_CONFIG = {
   kicker: 'INVITATION',
   envelopeCaption: 'YOU ARE CORDIALLY INVITED',
   title: 'Western Australian Curriculum',
-  subtitle: 'Karachi Launching Ceremony',
-  body: 'The Western Australia Education Network (WAEN) invites you to the official Karachi launch of the Western Australian Curriculum (Kindergarten – Year 12), following successful launches in Islamabad and Lahore.',
+  subtitle: 'Karachi Launch Ceremony',
+  body: 'The Western Australia Education Network (WAEN) invites you to the Official Karachi Launch Ceremony of the Western Australian Curriculum (Kindergarten to Year 12), following successful launches in Islamabad and Lahore.',
 
   // Date & Time (Pakistan Standard Time, UTC+05:00)
   dateDisplay: 'Thursday, 12 November 2026',
-  timeDisplay: '10:00 AM – 01:00 PM',
+  timeDisplay: '10:00 AM to 1:00 PM',
   timezoneLabel: 'Pakistan Standard Time (PKT)',
   isoStart: '2026-11-12T10:00:00+05:00',
   isoEnd: '2026-11-12T13:00:00+05:00',
 
   // Venue
-  venueName: 'Marriott Hotel, Karachi',
-  venueAddress: '9 Abdullah Haroon Road, Civil Lines, Karachi, Pakistan',
+  venueName: 'Governor House, Karachi',
+  venueAddress: 'Governor House, Karachi, Pakistan',
   googleMapsUrl:
-    'https://www.google.com/maps/search/?api=1&query=Marriott+Hotel+Karachi+Abdullah+Haroon+Road',
+    'https://www.google.com/maps/search/?api=1&query=Governor+House+Karachi',
 
   // Genuine Supplied Institutional Logos (in required order)
   logos: [
@@ -59,24 +59,15 @@ export const EVENT_CONFIG = {
  * SECURITY NOTE ON WHATSAPP NUMBER CONFIGURATION:
  * ---------------------------------------------------------------------------
  * 1. Preferred Official Production Configuration:
- *    Set `VITE_WAEN_WHATSAPP_NUMBER=923XXXXXXXXX` in your deployment environment
- *    variables (Vercel / Netlify / Cloudflare Pages). When an environment-configured
- *    number is valid, it serves as the trusted source of truth.
+ *    Set `VITE_WAEN_WHATSAPP_NUMBER=923095500000` in your deployment environment
+ *    variables (Vercel / Netlify / Cloudflare Pages).
  *
  * 2. Optional Query-Parameter Fallback (`?wa=923XXXXXXXXX`):
- *    Supported so an organizer can generate and distribute a single shareable
- *    invitation link before hardcoding an environment variable.
- *    IMPORTANT: Query-parameter-based numbers are NOT cryptographically
- *    authenticated—anyone editing the URL query string could substitute a
- *    different phone number. Therefore, for the official production deployment,
- *    always configure a fixed, verified WAEN WhatsApp number via
- *    `VITE_WAEN_WHATSAPP_NUMBER`!
- *
- * 3. Never invent or hardcode a placeholder WhatsApp number.
+ *    Query-parameter-based numbers are not cryptographically authenticated;
+ *    prefer a fixed verified WAEN number in environment configuration.
  */
 export const OFFICIAL_WAEN_WHATSAPP = '923095500000' // Official WAEN number (0309-5500000)
 
 export const ENV_WHATSAPP_NUMBER = (
   import.meta.env.VITE_WAEN_WHATSAPP_NUMBER || OFFICIAL_WAEN_WHATSAPP
 ).trim()
-

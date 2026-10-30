@@ -2,10 +2,7 @@ import { EVENT_CONFIG } from '../config/eventConfig'
 
 /**
  * Generates and downloads a standards-compliant RFC 5545 `.ics` calendar invite
- * for Thursday, 12 November 2026, 10:00 AM – 01:00 PM Pakistan Standard Time (UTC+05:00).
- *
- * 10:00 AM PKT = 05:00:00 UTC (`20261112T050000Z`)
- * 01:00 PM PKT = 08:00:00 UTC (`20261112T080000Z`)
+ * for Thursday, 12 November 2026, 10:00 AM to 1:00 PM Pakistan Standard Time (UTC+05:00).
  */
 export function downloadEventICS() {
   const nowUtc = new Date()
@@ -14,12 +11,12 @@ export function downloadEventICS() {
     .replace(/\.\d{3}Z$/, 'Z')
 
   const description = [
-    'Official Karachi Launching Ceremony of the Western Australian Curriculum (Kindergarten – Year 12).',
-    'Hosted by the Western Australia Education Network (WAEN Pakistan) in association with the Government of Western Australia and SCSA International.',
+    'Official Karachi Launch Ceremony of the Western Australian Curriculum (Kindergarten to Year 12).',
+    'Hosted by The Western Australia Education Network (WAEN) in association with the Government of Western Australia and SCSA International.',
     '',
-    'Date: Thursday, 12 November 2026',
-    'Time: 10:00 AM – 01:00 PM (Pakistan Standard Time)',
-    'Venue: Marriott Hotel, Karachi',
+    `Date: ${EVENT_CONFIG.dateDisplay}`,
+    `Time: ${EVENT_CONFIG.timeDisplay} (Pakistan Standard Time)`,
+    `Venue: ${EVENT_CONFIG.venueName}`,
   ].join('\\n')
 
   const icsLines = [
@@ -44,12 +41,12 @@ export function downloadEventICS() {
     'DTEND;TZID=Asia/Karachi:20261112T130000',
     `SUMMARY:${EVENT_CONFIG.title} — ${EVENT_CONFIG.subtitle}`,
     `DESCRIPTION:${description}`,
-    `LOCATION:${EVENT_CONFIG.venueName}, 9 Abdullah Haroon Road, Karachi, Pakistan`,
+    `LOCATION:${EVENT_CONFIG.venueAddress}`,
     'STATUS:CONFIRMED',
     'BEGIN:VALARM',
     'TRIGGER:-PT24H',
     'ACTION:DISPLAY',
-    'DESCRIPTION:Reminder: Western Australian Curriculum — Karachi Launching Ceremony tomorrow at 10:00 AM',
+    'DESCRIPTION:Reminder: Western Australian Curriculum — Karachi Launch Ceremony tomorrow at 10:00 AM',
     'END:VALARM',
     'END:VEVENT',
     'END:VCALENDAR',
@@ -61,11 +58,10 @@ export function downloadEventICS() {
 
   const link = document.createElement('a')
   link.href = url
-  link.setAttribute('download', 'WAEN-Karachi-Launching-Ceremony-2026.ics')
+  link.setAttribute('download', 'WAEN-Karachi-Launch-Ceremony-2026.ics')
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
 
   setTimeout(() => URL.revokeObjectURL(url), 1500)
 }
-

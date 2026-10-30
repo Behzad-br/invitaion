@@ -41,7 +41,7 @@ export default function CountdownTimer() {
           Ceremony In Progress
         </span>
         <p className="font-serif text-lg sm:text-xl mt-1">
-          The Karachi Launching Ceremony is currently underway at Marriott Hotel, Karachi.
+          The Karachi Launch Ceremony is currently underway at {EVENT_CONFIG.venueName}.
         </p>
       </div>
     )

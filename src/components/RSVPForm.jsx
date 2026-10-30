@@ -265,7 +265,7 @@ export default function RSVPForm({
                 setInstitution(e.target.value)
                 if (errors.institution) setErrors({ ...errors, institution: null })
               }}
-              placeholder="e.g., Karachi Grammar & International Academy"
+              placeholder="Your School / Institution Name"
               aria-invalid={Boolean(errors.institution)}
               aria-describedby={errors.institution ? 'err-institution' : undefined}
               className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-base text-plum placeholder:text-plum/40 shadow-sm outline-none transition-all focus:ring-2 ${

@@ -249,7 +249,15 @@ export default function InvitationReveal({ isRevealed }) {
           className="rounded-2xl border border-champagne/55 bg-gradient-to-b from-white via-lavender/20 to-white px-5 py-5 sm:px-8 sm:py-6 shadow-sm"
         >
           <p className="font-sans text-[15px] min-[375px]:text-base sm:text-lg leading-relaxed sm:leading-[1.85] text-plum/90 max-w-xl mx-auto">
-            {EVENT_CONFIG.body}
+            <strong className="font-bold text-plum">
+              The Western Australia Education Network (WAEN)
+            </strong>{' '}
+            invites you to the Official Karachi Launch Ceremony of the Western
+            Australian Curriculum{' '}
+            <strong className="font-bold text-plum">
+              (Kindergarten to Year 12)
+            </strong>
+            , following successful launches in Islamabad and Lahore.
           </p>
         </div>
       </div>

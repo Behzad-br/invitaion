@@ -3,7 +3,11 @@ import gsap from 'gsap'
 import { Sparkles } from 'lucide-react'
 import { EVENT_CONFIG } from '../config/eventConfig'
 
-export default function InvitationEnvelope({ onOpenComplete, onSkip }) {
+export default function InvitationEnvelope({
+  onOpenComplete,
+  onSkip,
+  onStartMusic,
+}) {
   const stageRef = useRef(null)
   const envelopeWrapRef = useRef(null)
   const flapRef = useRef(null)
@@ -102,6 +106,7 @@ export default function InvitationEnvelope({ onOpenComplete, onSkip }) {
   const handleOpenInvitation = () => {
     if (isOpening) return
     setIsOpening(true)
+    if (onStartMusic) onStartMusic()
 
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
@@ -372,7 +377,7 @@ export default function InvitationEnvelope({ onOpenComplete, onSkip }) {
         </div>
 
         <p className="font-script text-3xl sm:text-4xl text-champagne-light mt-0.5">
-          Karachi Launching Ceremony 2026
+          Karachi Launch Ceremony 2026
         </p>
       </div>
 
@@ -418,12 +423,20 @@ export default function InvitationEnvelope({ onOpenComplete, onSkip }) {
               className="vip-paper-surface absolute left-[6%] right-[6%] top-[8%] bottom-[8%] rounded-lg border border-champagne/65 px-4 py-3 sm:px-6 sm:py-4 flex flex-col items-center justify-between text-center shadow-md"
               style={{ zIndex: 12 }}
             >
-              <div className="w-full border border-champagne/45 rounded-md h-full px-3 py-2.5 flex flex-col items-center justify-center">
-                <img
-                  src={EVENT_CONFIG.crestAssets.purple}
-                  alt="WAEN Pakistan Crest"
-                  className="h-8 sm:h-10 w-auto object-contain mb-1.5 opacity-95"
-                />
+              <div className="w-full border border-champagne/45 rounded-md h-full px-3 py-2 flex flex-col items-center justify-center">
+                <div className="flex items-center justify-center gap-3 mb-1.5">
+                  <img
+                    src={EVENT_CONFIG.logos[0].purpleSrc}
+                    alt={EVENT_CONFIG.logos[0].shortName}
+                    className="h-6 sm:h-7 w-auto object-contain opacity-95"
+                  />
+                  <span className="h-5 w-[1px] bg-champagne/70" />
+                  <img
+                    src={EVENT_CONFIG.logos[2].purpleSrc}
+                    alt={EVENT_CONFIG.logos[2].shortName}
+                    className="h-5 sm:h-6 w-auto object-contain opacity-95"
+                  />
+                </div>
                 <span className="font-decorative text-[9px] sm:text-[10px] tracking-[0.26em] text-champagne-dark uppercase font-bold">
                   {EVENT_CONFIG.kicker}
                 </span>

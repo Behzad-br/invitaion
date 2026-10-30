@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Sparkles } from 'lucide-react'
@@ -11,7 +11,9 @@ import RSVPForm from './components/RSVPForm'
 import ShareInvitation from './components/ShareInvitation'
 import WhatsAppLinkBuilder from './components/WhatsAppLinkBuilder'
 import Footer from './components/Footer'
+import MusicToggle from './components/MusicToggle'
 import { EVENT_CONFIG } from './config/eventConfig'
+import { ceremonialAudio } from './utils/ambientAudio'
 import {
   buildShareableInvitationUrl,
   resolveWhatsAppConfig,
@@ -25,13 +27,57 @@ export default function App() {
   const [organizerOverride, setOrganizerOverride] = useState('')
   const [isSetupOpen, setIsSetupOpen] = useState(false)
   const [isRsvpInView, setIsRsvpInView] = useState(false)
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false)
 
+  const userMutedRef = useRef(false)
   const shareSectionRef = useRef(null)
 
   const waConfig = useMemo(
     () => resolveWhatsAppConfig(organizerOverride),
     [organizerOverride]
   )
+
+  const handleStartMusic = useCallback(async () => {
+    if (userMutedRef.current) return
+    const started = await ceremonialAudio.start()
+    if (started) {
+      setIsMusicPlaying(true)
+    }
+  }, [])
+
+  const handleToggleMusic = useCallback(async () => {
+    if (isMusicPlaying) {
+      userMutedRef.current = true
+      ceremonialAudio.stop()
+      setIsMusicPlaying(false)
+    } else {
+      userMutedRef.current = false
+      const started = await ceremonialAudio.start()
+      if (started) {
+        setIsMusicPlaying(true)
+      }
+    }
+  }, [isMusicPlaying])
+
+  // Politely pause music when switching to WhatsApp or another browser tab
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        ceremonialAudio.stop()
+        setIsMusicPlaying(false)
+      } else if (!userMutedRef.current && !showEnvelope) {
+        ceremonialAudio.start().then((ok) => {
+          if (ok) setIsMusicPlaying(true)
+        })
+      }
+    }
+
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+      ceremonialAudio.stop()
+    }
+  }, [showEnvelope])
 
   // Allow discreet `?setup=1` shortcut for WAEN organizers
   useEffect(() => {
@@ -48,7 +94,6 @@ export default function App() {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
-      // Refresh ScrollTrigger measurements once main invitation is interactive
       const timer = setTimeout(() => {
         ScrollTrigger.refresh()
       }, 120)
@@ -80,6 +125,7 @@ export default function App() {
   }
 
   const handleSkipAnimation = () => {
+    handleStartMusic()
     window.scrollTo({ top: 0, behavior: 'instant' })
     setShowEnvelope(false)
   }
@@ -103,7 +149,7 @@ export default function App() {
       try {
         await navigator.share({
           title: `${EVENT_CONFIG.title} — ${EVENT_CONFIG.subtitle}`,
-          text: `You are cordially invited by WAEN to the ${EVENT_CONFIG.title} — ${EVENT_CONFIG.subtitle} on ${EVENT_CONFIG.dateDisplay} at ${EVENT_CONFIG.venueName}.`,
+          text: `The Western Australia Education Network (WAEN) invites you to the Official Karachi Launch Ceremony of the Western Australian Curriculum on ${EVENT_CONFIG.dateDisplay} at ${EVENT_CONFIG.venueName}.`,
           url: shareUrl,
         })
         return
@@ -121,7 +167,10 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-lavender-soft via-lavender/65 to-lavender-soft py-0 sm:py-8 md:py-12 px-0 sm:px-4">
-      {/* Desktop Surrounding Luxury Silk Curves & Subtle Sparkles */}
+      {/* Floating Music Mute / Unmute Control */}
+      <MusicToggle isPlaying={isMusicPlaying} onToggle={handleToggleMusic} />
+
+      {/* Desktop Surrounding Soft Ambient Glow */}
       <div
         className="pointer-events-none fixed inset-0 overflow-hidden hidden sm:block"
         aria-hidden="true"
@@ -137,6 +186,7 @@ export default function App() {
           key={envelopeKey}
           onOpenComplete={handleOpenComplete}
           onSkip={handleSkipAnimation}
+          onStartMusic={handleStartMusic}
         />
       )}
 
@@ -147,7 +197,7 @@ export default function App() {
         }`}
       >
         <article className="vip-paper-surface gold-ornamental-frame relative sm:rounded-[2rem] border-y sm:border border-champagne/70 shadow-luxury overflow-hidden pb-0">
-          {/* Ambient Twinkling Golden Starlight & Corner Filigree */}
+          {/* Subtle Twinkling Golden Sparkles & Corner Filigree */}
           <FloatingAtmosphere />
 
           {/* Top Royal Purple & Champagne Gold Accent Strip */}
@@ -155,7 +205,7 @@ export default function App() {
             <div className="absolute inset-x-0 bottom-0 h-[1px] bg-champagne/80" />
           </div>
 
-          {/* Scene Two — Official Invitation Reveal & 3 Genuine Institutional Logos */}
+          {/* Scene Two — Official Invitation Reveal & Institutional Logos */}
           <InvitationReveal isRevealed={!showEnvelope} />
 
           {/* Scene Three — Event Details, Countdown, Calendar & Directions */}
@@ -196,7 +246,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Discreet Organizer WhatsApp Link Builder Modal */}
+      {/* Optional Organizer WhatsApp Link Builder Modal (?setup=1) */}
       <WhatsAppLinkBuilder
         isOpen={isSetupOpen}
         onClose={() => setIsSetupOpen(false)}
@@ -206,4 +256,3 @@ export default function App() {
     </div>
   )
 }
-

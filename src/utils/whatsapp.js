@@ -84,7 +84,7 @@ export function buildRSVPMessage({
   return [
     'Hello WAEN Team,',
     '',
-    'I would like to confirm my participation in the Western Australian Curriculum — Karachi Launching Ceremony.',
+    `I would like to confirm my participation in the ${EVENT_CONFIG.title} — ${EVENT_CONFIG.subtitle}.`,
     '',
     `Full Name: ${safeName}`,
     '',

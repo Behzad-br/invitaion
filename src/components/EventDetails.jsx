@@ -157,7 +157,7 @@ export default function EventDetails({ onShareClick }) {
           icon={MapPin}
           label="VENUE"
           primary={EVENT_CONFIG.venueName}
-          secondary="Abdullah Haroon Road, Karachi"
+          secondary="Official Launch Venue"
         />
       </div>
 
