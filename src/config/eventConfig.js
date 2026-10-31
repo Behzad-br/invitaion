@@ -21,7 +21,7 @@ export const EVENT_CONFIG = {
   venueName: 'Governor Hall, Karachi',
   venueAddress: 'Governor Hall, Karachi, Pakistan',
   googleMapsUrl:
-    'https://www.google.com/maps/search/?api=1&query=Governor+Hall+Karachi',
+    'https://www.bing.com/maps/search?FORM=HDRSC6&q=karach+mariot+hotel&cp=24.845472%7E67.031601&lvl=11&style=r',
 
   // Genuine Supplied Institutional Logos (in required order)
   logos: [

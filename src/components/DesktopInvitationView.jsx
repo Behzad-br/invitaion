@@ -419,7 +419,7 @@ export default function DesktopInvitationView({
                     {EVENT_CONFIG.venueName}
                   </p>
                   <p className="mt-0.5 text-[11px] text-royal/75 group-hover:text-royal underline-offset-2 group-hover:underline">
-                    View on Google Maps
+                    Get Directions
                   </p>
                 </div>
               </a>
