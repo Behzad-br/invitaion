@@ -318,8 +318,8 @@ export default function DesktopInvitationView({
                 <span className="h-[1.5px] w-16 xl:w-24 bg-gradient-to-r from-champagne to-transparent" />
               </div>
 
-              <span className="rounded-full border border-champagne/65 bg-lavender/55 px-3.5 py-1 font-decorative text-[10px] font-bold tracking-[0.22em] text-royal uppercase">
-                Official Launch
+              <span className="rounded-full border border-champagne/65 bg-lavender/55 px-3.5 py-1 font-sans text-xs font-bold tracking-[0.16em] text-royal">
+                12 Nov 2026
               </span>
             </div>
 

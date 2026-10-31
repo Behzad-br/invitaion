@@ -229,15 +229,18 @@ export default function InvitationReveal({ isRevealed }) {
           </svg>
         </div>
 
-        {/* Gold Ornamental Divider */}
+        {/* Gold Ornamental Divider with Full Short Date */}
         <div
           ref={ornamentRef}
           className="my-5 sm:my-6 lg:my-7 flex items-center justify-center gap-3"
-          aria-hidden="true"
         >
-          <span className="h-[1px] w-16 sm:w-28 bg-gradient-to-r from-transparent to-champagne" />
-          <span className="inline-block h-2.5 w-2.5 rotate-45 border border-champagne bg-champagne/35" />
-          <span className="h-[1px] w-16 sm:w-28 bg-gradient-to-l from-transparent to-champagne" />
+          <span className="h-[1px] w-10 sm:w-20 lg:w-28 bg-gradient-to-r from-transparent to-champagne" aria-hidden="true" />
+          <span className="inline-block h-2 w-2 rotate-45 border border-champagne bg-champagne/35" aria-hidden="true" />
+          <span className="text-gold-shimmer font-sans text-xs sm:text-sm tracking-[0.18em] font-bold">
+            12 Nov 2026
+          </span>
+          <span className="inline-block h-2 w-2 rotate-45 border border-champagne bg-champagne/35" aria-hidden="true" />
+          <span className="h-[1px] w-10 sm:w-20 lg:w-28 bg-gradient-to-l from-transparent to-champagne" aria-hidden="true" />
         </div>
 
         {/* Official Invitation Body Text (Stationary & Easy to Read) */}
