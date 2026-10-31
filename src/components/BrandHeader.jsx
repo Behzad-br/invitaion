@@ -22,7 +22,7 @@ const BrandHeader = forwardRef(function BrandHeader({ variant = 'purple' }, ref)
       className="w-full"
     >
       <div
-        className={`w-full rounded-2xl px-3.5 py-4 sm:px-6 sm:py-5 border transition-all ${
+        className={`w-full rounded-2xl px-3.5 py-4 sm:px-6 sm:py-5 lg:px-10 lg:py-6 border transition-all ${
           isWhite
             ? 'bg-royal-silk border-champagne/45 shadow-md'
             : 'bg-gradient-to-b from-white via-white to-lavender/45 border-champagne/55 shadow-sm'
@@ -69,7 +69,7 @@ const BrandHeader = forwardRef(function BrandHeader({ variant = 'purple' }, ref)
         </div>
 
         {/* Tablet & Desktop Layout (>=560px): 3-Column Horizontal Ceremonial Crest */}
-        <div className="hidden min-[560px]:flex items-center justify-between gap-4 sm:gap-6">
+        <div className="hidden min-[560px]:flex items-center justify-between gap-4 sm:gap-6 lg:gap-10 max-w-4xl mx-auto">
           {/* 1. WAEN Pakistan */}
           <div className="brand-logo-item flex-1 min-w-0 flex items-center justify-center">
             <img
@@ -77,28 +77,28 @@ const BrandHeader = forwardRef(function BrandHeader({ variant = 'purple' }, ref)
               alt={waenLogo.name}
               loading="eager"
               decoding="async"
-              className="h-13 sm:h-15 md:h-16 max-h-16 max-w-full w-auto object-contain select-none"
+              className="h-13 sm:h-15 md:h-16 lg:h-[4.5rem] max-h-20 max-w-full w-auto object-contain select-none"
             />
           </div>
 
           <div
-            className="h-12 w-[1px] shrink-0 bg-gradient-to-b from-transparent via-champagne to-transparent opacity-85"
+            className="h-12 lg:h-16 w-[1px] shrink-0 bg-gradient-to-b from-transparent via-champagne to-transparent opacity-85"
             aria-hidden="true"
           />
 
           {/* 2. Government of Western Australia */}
-          <div className="brand-logo-item shrink-0 flex items-center justify-center px-2">
+          <div className="brand-logo-item shrink-0 flex items-center justify-center px-2 lg:px-4">
             <img
               src={isWhite ? govWaLogo.whiteSrc : govWaLogo.purpleSrc}
               alt={govWaLogo.name}
               loading="eager"
               decoding="async"
-              className="h-16 md:h-[4.5rem] w-auto object-contain select-none"
+              className="h-16 md:h-[4.5rem] lg:h-[5.25rem] w-auto object-contain select-none"
             />
           </div>
 
           <div
-            className="h-12 w-[1px] shrink-0 bg-gradient-to-b from-transparent via-champagne to-transparent opacity-85"
+            className="h-12 lg:h-16 w-[1px] shrink-0 bg-gradient-to-b from-transparent via-champagne to-transparent opacity-85"
             aria-hidden="true"
           />
 
@@ -109,7 +109,7 @@ const BrandHeader = forwardRef(function BrandHeader({ variant = 'purple' }, ref)
               alt={scsaLogo.name}
               loading="eager"
               decoding="async"
-              className="h-12 sm:h-14 md:h-15 max-h-15 max-w-full w-auto object-contain select-none"
+              className="h-12 sm:h-14 md:h-15 lg:h-[4.25rem] max-h-20 max-w-full w-auto object-contain select-none"
             />
           </div>
         </div>

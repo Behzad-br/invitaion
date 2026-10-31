@@ -18,22 +18,24 @@ gsap.registerPlugin(ScrollTrigger)
 
 function DetailCard({ icon: Icon, label, primary, secondary }) {
   return (
-    <div className="detail-card group relative h-full rounded-2xl border border-champagne/65 bg-gradient-to-b from-white via-white to-lavender/45 p-5 sm:p-6 text-center shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-luxury">
-      <div className="relative mx-auto mb-3.5 flex h-12 w-12 items-center justify-center rounded-full border border-champagne/75 bg-gradient-to-br from-white to-lavender/80 text-royal shadow-sm">
+    <div className="detail-card group relative h-full rounded-2xl border border-champagne/65 bg-gradient-to-b from-white via-white to-lavender/45 p-5 sm:p-6 lg:p-5 text-center lg:text-left lg:flex lg:items-center lg:gap-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-luxury">
+      <div className="relative mx-auto lg:mx-0 mb-3.5 lg:mb-0 flex h-12 w-12 lg:h-13 lg:w-13 shrink-0 items-center justify-center rounded-full border border-champagne/75 bg-gradient-to-br from-white to-lavender/80 text-royal shadow-sm">
         <Icon className="h-5 w-5 text-royal" strokeWidth={1.9} />
       </div>
 
-      <span className="block text-gold-shimmer font-decorative text-[11px] font-bold tracking-[0.26em] uppercase">
-        {label}
-      </span>
+      <div className="min-w-0 flex-1">
+        <span className="block text-gold-shimmer font-decorative text-[11px] font-bold tracking-[0.26em] uppercase">
+          {label}
+        </span>
 
-      <h3 className="mt-1.5 font-serif text-xl sm:text-[1.35rem] font-bold text-plum leading-snug">
-        {primary}
-      </h3>
+        <h3 className="mt-1 font-serif text-xl sm:text-[1.35rem] lg:text-[1.28rem] xl:text-[1.38rem] font-bold text-plum leading-snug">
+          {primary}
+        </h3>
 
-      {secondary && (
-        <p className="mt-1 font-sans text-xs text-royal/75">{secondary}</p>
-      )}
+        {secondary && (
+          <p className="mt-0.5 font-sans text-xs text-royal/75">{secondary}</p>
+        )}
+      </div>
     </div>
   )
 }
@@ -121,26 +123,27 @@ export default function EventDetails({ onShareClick }) {
 
   return (
     <section
+      id="details-section"
       ref={sectionRef}
       aria-labelledby="ceremony-details-heading"
-      className="relative px-4 py-7 sm:px-8 sm:py-9"
+      className="relative px-4 py-7 sm:px-8 sm:py-9 lg:p-0 scroll-mt-6"
     >
-      <div className="mx-auto mb-6 h-[1px] max-w-md bg-gradient-to-r from-transparent via-champagne/80 to-transparent" />
+      <div className="mx-auto mb-6 h-[1px] max-w-md bg-gradient-to-r from-transparent via-champagne/80 to-transparent lg:hidden" />
 
-      <div ref={headingRef} className="text-center mb-6 sm:mb-7">
+      <div ref={headingRef} className="text-center lg:text-left mb-6 sm:mb-7 lg:mb-5">
         <span className="inline-block text-gold-shimmer font-decorative text-[11px] sm:text-xs font-bold tracking-[0.26em] uppercase">
           Ceremony Schedule &amp; Venue
         </span>
         <h2
           id="ceremony-details-heading"
-          className="mt-1 font-serif text-3xl sm:text-4xl font-extrabold text-royal-shimmer"
+          className="mt-1 font-serif text-3xl sm:text-4xl lg:text-[2.15rem] font-extrabold text-royal-shimmer"
         >
           Event Details
         </h2>
       </div>
 
-      {/* Three Crisp, Stationary Information Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+      {/* Responsive Cards: 1-col on mobile, 3-col on tablet, stacked horizontal rows in desktop left suite */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-4 sm:gap-5 lg:gap-3.5">
         <DetailCard
           icon={Calendar}
           label="DATE"
@@ -167,17 +170,19 @@ export default function EventDetails({ onShareClick }) {
       {/* Three Functional Action Buttons */}
       <div
         ref={actionsRef}
-        className="mt-7 sm:mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto"
+        className="mt-7 sm:mt-8 lg:mt-6 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-2 gap-3 max-w-2xl mx-auto"
       >
         <button
           type="button"
           onClick={handleCalendarDownload}
-          className="flex items-center justify-center gap-2.5 rounded-xl border border-champagne/65 bg-white hover:bg-lavender/60 active:scale-[0.99] px-4 py-3.5 text-sm font-semibold text-plum shadow-sm transition-all duration-200 min-h-[48px]"
+          className="flex items-center justify-center gap-2 rounded-xl border border-champagne/65 bg-white hover:bg-lavender/60 active:scale-[0.99] px-4 py-3.5 text-sm font-semibold text-plum shadow-sm transition-all duration-200 min-h-[48px]"
         >
           {calendarSaved ? (
             <>
               <Check className="h-4 w-4 text-emerald-700 shrink-0" />
-              <span className="text-emerald-800">Calendar (.ics) Downloaded</span>
+              <span className="text-emerald-800 text-xs xl:text-sm">
+                Saved (.ics)
+              </span>
             </>
           ) : (
             <>
@@ -191,7 +196,7 @@ export default function EventDetails({ onShareClick }) {
           href={EVENT_CONFIG.googleMapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2.5 rounded-xl border border-champagne/65 bg-white hover:bg-lavender/60 active:scale-[0.99] px-4 py-3.5 text-sm font-semibold text-plum shadow-sm transition-all duration-200 min-h-[48px]"
+          className="flex items-center justify-center gap-2 rounded-xl border border-champagne/65 bg-white hover:bg-lavender/60 active:scale-[0.99] px-4 py-3.5 text-sm font-semibold text-plum shadow-sm transition-all duration-200 min-h-[48px]"
         >
           <Navigation className="h-4 w-4 text-royal shrink-0" />
           <span>Get Directions</span>
@@ -200,7 +205,7 @@ export default function EventDetails({ onShareClick }) {
         <button
           type="button"
           onClick={onShareClick}
-          className="foil-sheen flex items-center justify-center gap-2.5 rounded-xl border border-champagne/75 bg-gradient-to-r from-royal to-plum hover:from-royal-light hover:to-royal active:scale-[0.99] px-4 py-3.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 min-h-[48px]"
+          className="foil-sheen lg:col-span-2 flex items-center justify-center gap-2.5 rounded-xl border border-champagne/75 bg-gradient-to-r from-royal to-plum hover:from-royal-light hover:to-royal active:scale-[0.99] px-4 py-3.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 min-h-[48px]"
         >
           <Share2 className="h-4 w-4 text-champagne-light shrink-0" />
           <span>Share Invitation</span>

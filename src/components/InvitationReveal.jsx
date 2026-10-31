@@ -118,9 +118,10 @@ export default function InvitationReveal({ isRevealed }) {
 
   return (
     <section
+      id="invitation-hero"
       ref={sectionRef}
       aria-labelledby="invitation-main-heading"
-      className="relative px-4 pt-5 pb-7 sm:px-8 sm:pt-8 sm:pb-10 overflow-hidden"
+      className="relative px-4 pt-5 pb-7 sm:px-8 sm:pt-8 sm:pb-10 lg:px-12 lg:pt-10 lg:pb-12 overflow-hidden scroll-mt-6"
     >
       {/* Subtle Stationary Silk Purple & Gold Corner Ribbons */}
       <svg
@@ -178,22 +179,22 @@ export default function InvitationReveal({ isRevealed }) {
       </div>
 
       {/* Main Ceremonial Content (Clean, Steady, Uncluttered) */}
-      <div className="relative z-10 mt-8 sm:mt-10 text-center max-w-2xl mx-auto px-1">
+      <div className="relative z-10 mt-8 sm:mt-10 lg:mt-12 text-center max-w-2xl lg:max-w-3xl mx-auto px-1">
         {/* INVITATION Kicker */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4">
+        <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4 lg:mb-5">
           <span
             ref={lineLeftRef}
-            className="h-[1.5px] w-10 sm:w-20 origin-right bg-gradient-to-r from-transparent via-royal to-champagne"
+            className="h-[1.5px] w-10 sm:w-20 lg:w-28 origin-right bg-gradient-to-r from-transparent via-royal to-champagne"
           />
           <span
             ref={kickerRef}
-            className="text-gold-shimmer font-decorative text-xs sm:text-base font-bold tracking-[0.34em] uppercase"
+            className="text-gold-shimmer font-decorative text-xs sm:text-base lg:text-lg font-bold tracking-[0.34em] uppercase"
           >
             {EVENT_CONFIG.kicker}
           </span>
           <span
             ref={lineRightRef}
-            className="h-[1.5px] w-10 sm:w-20 origin-left bg-gradient-to-l from-transparent via-royal to-champagne"
+            className="h-[1.5px] w-10 sm:w-20 lg:w-28 origin-left bg-gradient-to-l from-transparent via-royal to-champagne"
           />
         </div>
 
@@ -201,19 +202,19 @@ export default function InvitationReveal({ isRevealed }) {
         <h1
           id="invitation-main-heading"
           ref={titleRef}
-          className="font-serif font-extrabold text-[1.95rem] leading-[1.18] min-[375px]:text-[2.25rem] sm:text-5xl text-royal-shimmer tracking-tight"
+          className="font-serif font-extrabold text-[1.95rem] leading-[1.18] min-[375px]:text-[2.25rem] sm:text-5xl lg:text-6xl text-royal-shimmer tracking-tight"
         >
           {EVENT_CONFIG.title}
         </h1>
 
-        {/* Calligraphic Script Subheading: Karachi Launching Ceremony */}
-        <div ref={subtitleRef} className="mt-2 sm:mt-3 flex flex-col items-center">
-          <p className="font-script text-[2.4rem] leading-[1.15] min-[375px]:text-[2.7rem] sm:text-[3.5rem] text-royal px-2">
+        {/* Calligraphic Script Subheading: Karachi Launch Ceremony */}
+        <div ref={subtitleRef} className="mt-2 sm:mt-3 lg:mt-4 flex flex-col items-center">
+          <p className="font-script text-[2.4rem] leading-[1.15] min-[375px]:text-[2.7rem] sm:text-[3.5rem] lg:text-[4.1rem] text-royal px-2">
             {EVENT_CONFIG.subtitle}
           </p>
 
           <svg
-            className="w-48 sm:w-64 h-5 -mt-0.5 text-champagne"
+            className="w-48 sm:w-64 lg:w-80 h-5 lg:h-6 -mt-0.5 text-champagne"
             viewBox="0 0 260 22"
             fill="none"
             aria-hidden="true"
@@ -231,24 +232,24 @@ export default function InvitationReveal({ isRevealed }) {
         {/* Gold Ornamental Divider */}
         <div
           ref={ornamentRef}
-          className="my-5 sm:my-6 flex items-center justify-center gap-3"
+          className="my-5 sm:my-6 lg:my-7 flex items-center justify-center gap-3"
           aria-hidden="true"
         >
-          <span className="h-[1px] w-14 sm:w-24 bg-gradient-to-r from-transparent to-champagne" />
+          <span className="h-[1px] w-14 sm:w-24 lg:w-32 bg-gradient-to-r from-transparent to-champagne" />
           <span className="inline-block h-2 w-2 rotate-45 border border-champagne bg-champagne/35" />
           <span className="text-gold-shimmer font-decorative text-xs tracking-[0.26em] uppercase font-bold">
             2026
           </span>
           <span className="inline-block h-2 w-2 rotate-45 border border-champagne bg-champagne/35" />
-          <span className="h-[1px] w-14 sm:w-24 bg-gradient-to-l from-transparent to-champagne" />
+          <span className="h-[1px] w-14 sm:w-24 lg:w-32 bg-gradient-to-l from-transparent to-champagne" />
         </div>
 
         {/* Official Invitation Body Text (Stationary & Easy to Read) */}
         <div
           ref={bodyCardRef}
-          className="rounded-2xl border border-champagne/55 bg-gradient-to-b from-white via-lavender/20 to-white px-5 py-5 sm:px-8 sm:py-6 shadow-sm"
+          className="rounded-2xl border border-champagne/55 bg-gradient-to-b from-white via-lavender/20 to-white px-5 py-5 sm:px-8 sm:py-6 lg:px-12 lg:py-8 shadow-sm"
         >
-          <p className="font-sans text-[15px] min-[375px]:text-base sm:text-lg leading-relaxed sm:leading-[1.85] text-plum/90 max-w-xl mx-auto">
+          <p className="font-sans text-[15px] min-[375px]:text-base sm:text-lg lg:text-[1.18rem] leading-relaxed sm:leading-[1.85] text-plum/90 max-w-2xl mx-auto">
             <strong className="font-bold text-plum">
               The Western Australia Education Network (WAEN)
             </strong>{' '}

@@ -49,7 +49,7 @@ export default function ShareInvitation({ activeWaNumber, sectionRef }) {
     <section
       ref={sectionRef}
       aria-label="Share Invitation Link"
-      className="px-4 pb-8 sm:px-8 sm:pb-10"
+      className="px-4 pb-8 sm:px-8 sm:pb-10 lg:px-0 lg:pt-6 lg:pb-0"
     >
       <div className="rounded-2xl border border-champagne/55 bg-white/90 p-5 sm:p-6 text-center shadow-sm">
         <div className="mx-auto mb-2.5 flex h-10 w-10 items-center justify-center rounded-full bg-lavender/75 border border-champagne/55 text-royal">

@@ -221,9 +221,9 @@ export default function App() {
         />
       )}
 
-      {/* Main Luxury VIP Printed-Style Digital Invitation Card */}
+      {/* Main Luxury VIP Digital Invitation Card (Mobile-First + Widescreen Desktop Friendly) */}
       <main
-        className={`relative z-10 mx-auto w-full max-w-3xl transition-opacity duration-500 ${
+        className={`relative z-10 mx-auto w-full max-w-3xl lg:max-w-5xl xl:max-w-6xl transition-opacity duration-500 ${
           showEnvelope ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
       >
@@ -236,26 +236,65 @@ export default function App() {
             <div className="absolute inset-x-0 bottom-0 h-[1px] bg-champagne/80" />
           </div>
 
+          {/* Desktop Quick-Navigation Bar (visible on >=1024px desktop screens) */}
+          <nav
+            aria-label="Invitation Sections"
+            className="hidden lg:flex items-center justify-between border-b border-champagne/35 bg-lavender/25 px-12 py-3 relative z-10"
+          >
+            <span className="font-decorative text-[11px] font-bold tracking-[0.24em] text-royal uppercase">
+              WAEN Pakistan • Official VIP Invitation
+            </span>
+            <div className="flex items-center gap-6 text-xs font-semibold tracking-[0.14em] uppercase text-plum/80">
+              <a
+                href="#invitation-hero"
+                className="hover:text-royal transition-colors"
+              >
+                Invitation
+              </a>
+              <span className="text-champagne" aria-hidden="true">•</span>
+              <a
+                href="#details-section"
+                className="hover:text-royal transition-colors"
+              >
+                Schedule &amp; Venue
+              </a>
+              <span className="text-champagne" aria-hidden="true">•</span>
+              <button
+                type="button"
+                onClick={scrollToRsvp}
+                className="rounded-full border border-champagne/75 bg-royal px-4 py-1.5 text-[11px] font-bold tracking-[0.16em] text-champagne-light hover:bg-royal-light transition-colors"
+              >
+                Confirm Attendance
+              </button>
+            </div>
+          </nav>
+
           {/* Scene Two — Official Invitation Reveal & Institutional Logos */}
           <InvitationReveal isRevealed={!showEnvelope} />
 
-          {/* Scene Three — Event Details, Countdown, Calendar & Directions */}
-          <EventDetails onShareClick={handleShareAction} />
+          {/* Desktop Two-Column Interactive Suite (Stacked cleanly on Mobile/Tablet) */}
+          <div className="lg:border-t lg:border-champagne/35 lg:mx-12 lg:pt-10 lg:pb-10 lg:grid lg:grid-cols-12 lg:gap-9 xl:gap-12 lg:items-start relative z-10">
+            {/* Left Desktop Column: Event Details, Countdown, Calendar & Directions */}
+            <div className="lg:col-span-5 lg:sticky lg:top-6">
+              <EventDetails onShareClick={handleShareAction} />
+            </div>
 
-          {/* Scene Five — Interactive WhatsApp RSVP Registration */}
-          <RSVPForm
-            waConfig={waConfig}
-            onOpenOrganizerSetup={() => setIsSetupOpen(true)}
-            sectionId="rsvp-section"
-          />
+            {/* Right Desktop Column: Interactive WhatsApp RSVP + Share Link */}
+            <div className="lg:col-span-7">
+              <RSVPForm
+                waConfig={waConfig}
+                onOpenOrganizerSetup={() => setIsSetupOpen(true)}
+                sectionId="rsvp-section"
+              />
 
-          {/* Shareable Multi-School Invitation Panel */}
-          <ShareInvitation
-            activeWaNumber={waConfig.number}
-            sectionRef={shareSectionRef}
-          />
+              <ShareInvitation
+                activeWaNumber={waConfig.number}
+                sectionRef={shareSectionRef}
+              />
+            </div>
+          </div>
 
-          {/* Scene Four — Animated Karachi Skyline Featuring Mazar-e-Quaid */}
+          {/* Scene Four — Panoramic Animated Karachi Skyline Featuring Mazar-e-Quaid */}
           <KarachiSkyline />
 
           {/* Institutional Footer + Reopen Invitation */}

@@ -159,7 +159,7 @@ export default function RSVPForm({
       id={sectionId}
       ref={sectionRef}
       aria-labelledby="rsvp-heading"
-      className="relative px-4 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10 scroll-mt-6"
+      className="relative px-4 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10 lg:p-0 scroll-mt-6"
     >
       <div
         ref={panelRef}

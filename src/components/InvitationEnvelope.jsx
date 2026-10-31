@@ -366,29 +366,29 @@ export default function InvitationEnvelope({
       {/* Stationary Ceremonial Top Heading */}
       <div
         ref={captionRef}
-        className="relative z-20 mt-2 sm:mt-4 flex flex-col items-center text-center px-2"
+        className="relative z-20 mt-2 sm:mt-4 lg:mt-6 flex flex-col items-center text-center px-2"
       >
         <div className="flex items-center gap-2.5 sm:gap-4 mb-1">
-          <span className="h-[1px] w-7 sm:w-14 bg-gradient-to-r from-transparent to-champagne/85" />
-          <span className="text-gold-shimmer font-decorative text-xs sm:text-sm font-bold tracking-[0.26em] uppercase">
+          <span className="h-[1px] w-7 sm:w-14 lg:w-20 bg-gradient-to-r from-transparent to-champagne/85" />
+          <span className="text-gold-shimmer font-decorative text-xs sm:text-sm lg:text-base font-bold tracking-[0.26em] uppercase">
             {EVENT_CONFIG.envelopeCaption}
           </span>
-          <span className="h-[1px] w-7 sm:w-14 bg-gradient-to-l from-transparent to-champagne/85" />
+          <span className="h-[1px] w-7 sm:w-14 lg:w-20 bg-gradient-to-l from-transparent to-champagne/85" />
         </div>
 
-        <p className="font-script text-3xl sm:text-4xl text-champagne-light mt-0.5">
+        <p className="font-script text-3xl sm:text-4xl lg:text-5xl text-champagne-light mt-0.5">
           Karachi Launch Ceremony 2026
         </p>
       </div>
 
       {/* Centerpiece Steady 3D Luxury Envelope */}
       <div className="relative z-20 my-auto flex items-center justify-center w-full py-3">
-        <div className="perspective-stage w-full max-w-[390px] sm:max-w-[450px] flex justify-center">
+        <div className="perspective-stage w-full max-w-[390px] sm:max-w-[460px] lg:max-w-[540px] flex justify-center">
           <div
             ref={envelopeWrapRef}
             onClick={handleOpenInvitation}
-            className={`preserve-3d relative w-[88vw] max-w-[380px] sm:max-w-[440px] aspect-[16/11] rounded-xl shadow-envelope transition-transform duration-300 ${
-              !isOpening ? 'cursor-pointer hover:scale-[1.015]' : ''
+            className={`preserve-3d relative w-[88vw] max-w-[380px] sm:max-w-[450px] lg:max-w-[530px] aspect-[16/11] rounded-xl shadow-envelope transition-transform duration-300 ${
+              !isOpening ? 'cursor-pointer hover:scale-[1.018]' : ''
             }`}
           >
             {/* Warm Golden Aura Behind Envelope */}
@@ -625,7 +625,7 @@ export default function InvitationEnvelope({
       {/* Bottom Interactive Glowing CTA & Skip Button */}
       <div
         ref={controlsRef}
-        className="relative z-20 mb-2 sm:mb-4 flex flex-col items-center gap-3 w-full max-w-xs"
+        className="relative z-20 mb-2 sm:mb-4 lg:mb-6 flex flex-col items-center gap-3 w-full max-w-xs lg:max-w-sm"
       >
         <button
           type="button"
