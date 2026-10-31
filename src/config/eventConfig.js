@@ -12,7 +12,7 @@ export const EVENT_CONFIG = {
 
   // Date & Time (Pakistan Standard Time, UTC+05:00)
   dateDisplay: 'Thursday, 12 November 2026',
-  timeDisplay: '10:00 AM to 1:00 PM',
+  timeDisplay: '10:00 AM – 1:00 PM',
   timezoneLabel: 'Pakistan Standard Time (PKT)',
   isoStart: '2026-11-12T10:00:00+05:00',
   isoEnd: '2026-11-12T13:00:00+05:00',
