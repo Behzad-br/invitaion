@@ -12,6 +12,7 @@ import ShareInvitation from './components/ShareInvitation'
 import WhatsAppLinkBuilder from './components/WhatsAppLinkBuilder'
 import Footer from './components/Footer'
 import MusicToggle from './components/MusicToggle'
+import DesktopInvitationView from './components/DesktopInvitationView'
 import { EVENT_CONFIG } from './config/eventConfig'
 import { ceremonialAudio } from './utils/ambientAudio'
 import {
@@ -28,6 +29,14 @@ export default function App() {
   const [isSetupOpen, setIsSetupOpen] = useState(false)
   const [isRsvpInView, setIsRsvpInView] = useState(false)
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+
+  // Shared RSVP form state across mobile and laptop interfaces
+  const [rsvpFormValues, setRsvpFormValues] = useState({
+    fullName: '',
+    institution: '',
+    designation: '',
+    attendees: 1,
+  })
 
   const userMutedRef = useRef(false)
   const shareSectionRef = useRef(null)
@@ -135,7 +144,7 @@ export default function App() {
     }
   }, [showEnvelope])
 
-  // Hide mobile sticky RSVP bar when RSVP section itself is visible on screen
+  // Hide mobile sticky RSVP bar when mobile RSVP section itself is visible
   useEffect(() => {
     const rsvpEl = document.getElementById('rsvp-section')
     if (!rsvpEl || typeof IntersectionObserver === 'undefined') return
@@ -167,14 +176,14 @@ export default function App() {
     setShowEnvelope(true)
   }
 
-  const scrollToRsvp = () => {
+  const scrollToMobileRsvp = () => {
     const el = document.getElementById('rsvp-section')
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 
-  const handleShareAction = async () => {
+  const handleMobileShareAction = async () => {
     const shareUrl = buildShareableInvitationUrl(waConfig.number)
     if (navigator.share) {
       try {
@@ -197,21 +206,13 @@ export default function App() {
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-lavender-soft via-lavender/65 to-lavender-soft py-0 sm:py-8 md:py-12 px-0 sm:px-4">
-      {/* Top-Right Music Off / On Toggle */}
-      <MusicToggle isPlaying={isMusicPlaying} onToggle={handleToggleMusic} />
-
-      {/* Desktop Surrounding Soft Ambient Glow */}
-      <div
-        className="pointer-events-none fixed inset-0 overflow-hidden hidden sm:block"
-        aria-hidden="true"
-      >
-        <div className="absolute -top-36 -left-36 h-96 w-96 rounded-full bg-royal/10 blur-3xl" />
-        <div className="absolute top-1/3 -right-32 h-[28rem] w-[28rem] rounded-full bg-champagne/15 blur-3xl" />
-        <div className="absolute -bottom-36 left-1/4 h-96 w-96 rounded-full bg-plum/10 blur-3xl" />
+    <div className="relative min-h-screen w-full overflow-x-hidden">
+      {/* Floating Top-Right Music Toggle (Always shown during Envelope; shown on Mobile after reveal, while Laptop uses its integrated Top Toolbar button) */}
+      <div className={showEnvelope ? 'block' : 'lg:hidden'}>
+        <MusicToggle isPlaying={isMusicPlaying} onToggle={handleToggleMusic} />
       </div>
 
-      {/* Scene One — Cinematic 3D Envelope Overlay */}
+      {/* Scene One — Cinematic 3D Envelope Overlay (Mobile Vertical | Laptop Widescreen Split Stage) */}
       {showEnvelope && (
         <InvitationEnvelope
           key={envelopeKey}
@@ -221,100 +222,88 @@ export default function App() {
         />
       )}
 
-      {/* Main Luxury VIP Digital Invitation Card (Mobile-First + Widescreen Desktop Friendly) */}
-      <main
-        className={`relative z-10 mx-auto w-full max-w-3xl lg:max-w-5xl xl:max-w-6xl transition-opacity duration-500 ${
+      {/* =====================================================================
+          INTERFACE A: MOBILE & TABLET (< 1024px) — Preserved Vertical VIP Card
+         ===================================================================== */}
+      <div
+        className={`lg:hidden relative min-h-screen w-full bg-gradient-to-b from-lavender-soft via-lavender/65 to-lavender-soft py-0 sm:py-8 md:py-10 px-0 sm:px-4 transition-opacity duration-500 ${
           showEnvelope ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
       >
-        <article className="vip-paper-surface gold-ornamental-frame relative sm:rounded-[2rem] border-y sm:border border-champagne/70 shadow-luxury overflow-hidden pb-0">
-          {/* Subtle Twinkling Golden Sparkles & Corner Filigree */}
-          <FloatingAtmosphere />
+        <main className="relative z-10 mx-auto w-full max-w-3xl">
+          <article className="vip-paper-surface gold-ornamental-frame relative sm:rounded-[2rem] border-y sm:border border-champagne/70 shadow-luxury overflow-hidden pb-0">
+            <FloatingAtmosphere />
 
-          {/* Top Royal Purple & Champagne Gold Accent Strip */}
-          <div className="h-2 w-full bg-gradient-to-r from-plum via-royal to-plum relative">
-            <div className="absolute inset-x-0 bottom-0 h-[1px] bg-champagne/80" />
+            {/* Top Royal Purple & Champagne Gold Accent Strip */}
+            <div className="h-2 w-full bg-gradient-to-r from-plum via-royal to-plum relative">
+              <div className="absolute inset-x-0 bottom-0 h-[1px] bg-champagne/80" />
+            </div>
+
+            {/* Scene Two — Official Invitation Reveal & Institutional Logos */}
+            <InvitationReveal isRevealed={!showEnvelope} />
+
+            {/* Scene Three — Event Details, Countdown, Calendar & Directions */}
+            <EventDetails onShareClick={handleMobileShareAction} />
+
+            {/* Interactive WhatsApp RSVP Form */}
+            <RSVPForm
+              waConfig={waConfig}
+              onOpenOrganizerSetup={() => setIsSetupOpen(true)}
+              sectionId="rsvp-section"
+              idPrefix="mobile"
+              variant="mobile"
+              formValues={rsvpFormValues}
+              onFormValuesChange={setRsvpFormValues}
+            />
+
+            {/* Share Invitation Link */}
+            <ShareInvitation
+              activeWaNumber={waConfig.number}
+              sectionRef={shareSectionRef}
+            />
+
+            {/* Scene Four — Panoramic Animated Karachi Skyline */}
+            <KarachiSkyline variant="mobile" isRevealed={!showEnvelope} />
+
+            {/* Institutional Footer + Reopen Invitation */}
+            <Footer onReopenInvitation={handleReopenInvitation} />
+          </article>
+        </main>
+
+        {/* Mobile Floating Sticky RSVP Action Pill */}
+        {!showEnvelope && !isRsvpInView && (
+          <div className="fixed bottom-4 inset-x-4 z-40 md:hidden pointer-events-none flex justify-center">
+            <button
+              type="button"
+              onClick={scrollToMobileRsvp}
+              className="pointer-events-auto flex items-center justify-center gap-2.5 rounded-full border border-champagne/80 bg-plum/95 backdrop-blur-md px-6 py-3.5 text-xs font-bold tracking-[0.18em] uppercase text-champagne-light shadow-[0_12px_30px_rgba(34,4,54,0.5)] active:scale-95 transition-transform"
+            >
+              <Sparkles className="h-4 w-4 text-champagne" />
+              <span>Reserve Your Presence • RSVP</span>
+            </button>
           </div>
+        )}
+      </div>
 
-          {/* Desktop Quick-Navigation Bar (visible on >=1024px desktop screens) */}
-          <nav
-            aria-label="Invitation Sections"
-            className="hidden lg:flex items-center justify-between border-b border-champagne/35 bg-lavender/25 px-12 py-3 relative z-10"
-          >
-            <span className="font-decorative text-[11px] font-bold tracking-[0.24em] text-royal uppercase">
-              WAEN Pakistan • Official VIP Invitation
-            </span>
-            <div className="flex items-center gap-6 text-xs font-semibold tracking-[0.14em] uppercase text-plum/80">
-              <a
-                href="#invitation-hero"
-                className="hover:text-royal transition-colors"
-              >
-                Invitation
-              </a>
-              <span className="text-champagne" aria-hidden="true">•</span>
-              <a
-                href="#details-section"
-                className="hover:text-royal transition-colors"
-              >
-                Schedule &amp; Venue
-              </a>
-              <span className="text-champagne" aria-hidden="true">•</span>
-              <button
-                type="button"
-                onClick={scrollToRsvp}
-                className="rounded-full border border-champagne/75 bg-royal px-4 py-1.5 text-[11px] font-bold tracking-[0.16em] text-champagne-light hover:bg-royal-light transition-colors"
-              >
-                Confirm Attendance
-              </button>
-            </div>
-          </nav>
-
-          {/* Scene Two — Official Invitation Reveal & Institutional Logos */}
-          <InvitationReveal isRevealed={!showEnvelope} />
-
-          {/* Desktop Two-Column Interactive Suite (Stacked cleanly on Mobile/Tablet) */}
-          <div className="lg:border-t lg:border-champagne/35 lg:mx-12 lg:pt-10 lg:pb-10 lg:grid lg:grid-cols-12 lg:gap-9 xl:gap-12 lg:items-start relative z-10">
-            {/* Left Desktop Column: Event Details, Countdown, Calendar & Directions */}
-            <div className="lg:col-span-5 lg:sticky lg:top-6">
-              <EventDetails onShareClick={handleShareAction} />
-            </div>
-
-            {/* Right Desktop Column: Interactive WhatsApp RSVP + Share Link */}
-            <div className="lg:col-span-7">
-              <RSVPForm
-                waConfig={waConfig}
-                onOpenOrganizerSetup={() => setIsSetupOpen(true)}
-                sectionId="rsvp-section"
-              />
-
-              <ShareInvitation
-                activeWaNumber={waConfig.number}
-                sectionRef={shareSectionRef}
-              />
-            </div>
-          </div>
-
-          {/* Scene Four — Panoramic Animated Karachi Skyline Featuring Mazar-e-Quaid */}
-          <KarachiSkyline />
-
-          {/* Institutional Footer + Reopen Invitation */}
-          <Footer onReopenInvitation={handleReopenInvitation} />
-        </article>
-      </main>
-
-      {/* Mobile Floating Sticky RSVP Action Pill (auto-hides inside RSVP form) */}
-      {!showEnvelope && !isRsvpInView && (
-        <div className="fixed bottom-4 inset-x-4 z-40 md:hidden pointer-events-none flex justify-center">
-          <button
-            type="button"
-            onClick={scrollToRsvp}
-            className="pointer-events-auto flex items-center justify-center gap-2.5 rounded-full border border-champagne/80 bg-plum/95 backdrop-blur-md px-6 py-3.5 text-xs font-bold tracking-[0.18em] uppercase text-champagne-light shadow-[0_12px_30px_rgba(34,4,54,0.5)] active:scale-95 transition-transform"
-          >
-            <Sparkles className="h-4 w-4 text-champagne" />
-            <span>Reserve Your Presence • RSVP</span>
-          </button>
-        </div>
-      )}
+      {/* =====================================================================
+          INTERFACE B: LAPTOP & DESKTOP (>= 1024px) — Dedicated Widescreen Suite
+         ===================================================================== */}
+      <div
+        className={`hidden lg:block transition-opacity duration-500 ${
+          showEnvelope ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+      >
+        <DesktopInvitationView
+          isRevealed={!showEnvelope}
+          waConfig={waConfig}
+          onOpenOrganizerSetup={() => setIsSetupOpen(true)}
+          onReopenInvitation={handleReopenInvitation}
+          isMusicPlaying={isMusicPlaying}
+          onToggleMusic={handleToggleMusic}
+          formValues={rsvpFormValues}
+          onFormValuesChange={setRsvpFormValues}
+        />
+      </div>
 
       {/* Optional Organizer WhatsApp Link Builder Modal (?setup=1) */}
       <WhatsAppLinkBuilder

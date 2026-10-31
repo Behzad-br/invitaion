@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { Sparkles } from 'lucide-react'
+import { Calendar, MapPin, Sparkles } from 'lucide-react'
 import { EVENT_CONFIG } from '../config/eventConfig'
 
 export default function InvitationEnvelope({
@@ -9,6 +9,7 @@ export default function InvitationEnvelope({
   onStartMusic,
 }) {
   const stageRef = useRef(null)
+  const desktopTopBarRef = useRef(null)
   const envelopeWrapRef = useRef(null)
   const flapRef = useRef(null)
   const cardRef = useRef(null)
@@ -23,12 +24,14 @@ export default function InvitationEnvelope({
 
   const [isOpening, setIsOpening] = useState(false)
 
+  const [waenLogo, govWaLogo, scsaLogo] = EVENT_CONFIG.logos
+
   // Subtle twinkling starlight glints in background
   const ambientParticles = useMemo(
     () =>
-      Array.from({ length: 14 }, (_, i) => ({
+      Array.from({ length: 16 }, (_, i) => ({
         id: i,
-        left: `${7 + ((i * 19) % 86)}%`,
+        left: `${6 + ((i * 19) % 88)}%`,
         top: `${8 + ((i * 23) % 82)}%`,
         size: 3 + (i % 3) * 1.5,
         isGold: i % 3 !== 0,
@@ -61,14 +64,26 @@ export default function InvitationEnvelope({
 
     const ctx = gsap.context(() => {
       if (prefersReducedMotion) {
-        gsap.set([captionRef.current, envelopeWrapRef.current, controlsRef.current], {
-          opacity: 1,
-          y: 0,
-        })
+        gsap.set(
+          [
+            desktopTopBarRef.current,
+            captionRef.current,
+            envelopeWrapRef.current,
+            controlsRef.current,
+          ],
+          { opacity: 1, y: 0 }
+        )
         return
       }
 
-      // Fast, smooth entrance (no sluggish wait)
+      if (desktopTopBarRef.current) {
+        gsap.fromTo(
+          desktopTopBarRef.current,
+          { opacity: 0, y: -10 },
+          { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+        )
+      }
+
       gsap.fromTo(
         captionRef.current,
         { opacity: 0, y: -12 },
@@ -134,9 +149,15 @@ export default function InvitationEnvelope({
     })
     timelineRef.current = tl
 
-    // Hide CTA controls & top caption swiftly
+    // Hide CTA controls, top bar & caption swiftly
+    const fadeTargets = [
+      controlsRef.current,
+      captionRef.current,
+      desktopTopBarRef.current,
+    ].filter(Boolean)
+
     tl.to(
-      [controlsRef.current, captionRef.current],
+      fadeTargets,
       {
         opacity: 0,
         y: -8,
@@ -291,7 +312,7 @@ export default function InvitationEnvelope({
   return (
     <div
       ref={stageRef}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-hidden bg-plum-deep px-4 py-6 sm:py-10 select-none"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-hidden bg-plum-deep px-4 py-6 sm:py-10 lg:px-10 xl:px-16 lg:py-7 select-none"
       style={{
         background:
           'radial-gradient(circle at 50% 30%, #641E82 0%, #35094F 48%, #1A0229 100%)',
@@ -363,287 +384,338 @@ export default function InvitationEnvelope({
         ))}
       </div>
 
-      {/* Stationary Ceremonial Top Heading */}
+      {/* Laptop/Desktop Top Institutional Crest Bar (Hidden on Mobile) */}
       <div
-        ref={captionRef}
-        className="relative z-20 mt-2 sm:mt-4 lg:mt-6 flex flex-col items-center text-center px-2"
+        ref={desktopTopBarRef}
+        className="hidden lg:flex relative z-20 w-full max-w-7xl mx-auto items-center justify-between border-b border-champagne/30 pb-4 pr-36"
       >
-        <div className="flex items-center gap-2.5 sm:gap-4 mb-1">
-          <span className="h-[1px] w-7 sm:w-14 lg:w-20 bg-gradient-to-r from-transparent to-champagne/85" />
-          <span className="text-gold-shimmer font-decorative text-xs sm:text-sm lg:text-base font-bold tracking-[0.26em] uppercase">
-            {EVENT_CONFIG.envelopeCaption}
-          </span>
-          <span className="h-[1px] w-7 sm:w-14 lg:w-20 bg-gradient-to-l from-transparent to-champagne/85" />
+        <div className="flex items-center gap-6">
+          <img
+            src={waenLogo.whiteSrc}
+            alt={waenLogo.shortName}
+            className="h-11 xl:h-12 w-auto object-contain opacity-95"
+          />
+          <span className="h-8 w-[1px] bg-champagne/40" />
+          <img
+            src={govWaLogo.whiteSrc}
+            alt={govWaLogo.shortName}
+            className="h-12 xl:h-13 w-auto object-contain opacity-95"
+          />
+          <span className="h-8 w-[1px] bg-champagne/40" />
+          <img
+            src={scsaLogo.whiteSrc}
+            alt={scsaLogo.shortName}
+            className="h-10 xl:h-11 w-auto object-contain opacity-95"
+          />
         </div>
 
-        <p className="font-script text-3xl sm:text-4xl lg:text-5xl text-champagne-light mt-0.5">
-          Karachi Launch Ceremony 2026
-        </p>
+        <span className="text-gold-shimmer font-decorative text-[11px] font-bold tracking-[0.26em] uppercase">
+          Official VIP Ceremony Portal
+        </span>
       </div>
 
-      {/* Centerpiece Steady 3D Luxury Envelope */}
-      <div className="relative z-20 my-auto flex items-center justify-center w-full py-3">
-        <div className="perspective-stage w-full max-w-[390px] sm:max-w-[460px] lg:max-w-[540px] flex justify-center">
-          <div
-            ref={envelopeWrapRef}
-            onClick={handleOpenInvitation}
-            className={`preserve-3d relative w-[88vw] max-w-[380px] sm:max-w-[450px] lg:max-w-[530px] aspect-[16/11] rounded-xl shadow-envelope transition-transform duration-300 ${
-              !isOpening ? 'cursor-pointer hover:scale-[1.018]' : ''
-            }`}
-          >
-            {/* Warm Golden Aura Behind Envelope */}
-            <div
-              ref={innerGlowRef}
-              className="pointer-events-none absolute -inset-4 rounded-3xl bg-champagne/20 blur-2xl opacity-30"
-              style={{ zIndex: 1 }}
-            />
+      {/* Responsive Stage: Vertical Stack on Mobile (<1024px) | Widescreen Split Stage on Laptop (>=1024px) */}
+      <div className="relative z-20 flex-1 w-full max-w-7xl mx-auto flex flex-col items-center justify-between lg:grid lg:grid-cols-12 lg:grid-rows-[auto_auto] lg:content-center lg:gap-x-10 xl:gap-x-16">
+        {/* Top Heading on Mobile | Left Editorial Welcome Column on Laptop */}
+        <div
+          ref={captionRef}
+          className="mt-2 sm:mt-4 lg:mt-0 flex flex-col items-center lg:items-start text-center lg:text-left px-2 lg:px-0 lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:self-end"
+        >
+          <div className="flex items-center gap-2.5 sm:gap-4 mb-1 lg:mb-3">
+            <span className="h-[1px] w-7 sm:w-14 lg:hidden bg-gradient-to-r from-transparent to-champagne/85" />
+            <span className="hidden lg:inline-block h-2 w-2 rotate-45 border border-champagne bg-champagne/40" />
+            <span className="text-gold-shimmer font-decorative text-xs sm:text-sm lg:text-xs xl:text-sm font-bold tracking-[0.26em] uppercase">
+              {EVENT_CONFIG.envelopeCaption}
+            </span>
+            <span className="h-[1px] w-7 sm:w-14 lg:w-16 bg-gradient-to-l from-transparent to-champagne/85" />
+          </div>
 
-            {/* Envelope Back & Satin Interior */}
+          {/* Laptop Editorial Headline */}
+          <h1 className="hidden lg:block font-serif font-extrabold text-4xl xl:text-5xl text-white leading-[1.14] tracking-tight">
+            {EVENT_CONFIG.title}
+          </h1>
+
+          <p className="font-script text-3xl sm:text-4xl lg:text-[2.65rem] xl:text-5xl text-champagne-light mt-0.5 lg:mt-2">
+            Karachi Launch Ceremony 2026
+          </p>
+
+          {/* Laptop Date & Venue Quick Summary */}
+          <div className="hidden lg:flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 pt-4 border-t border-champagne/25 text-xs xl:text-sm text-lavender/90">
+            <span className="inline-flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-champagne shrink-0" />
+              <span>{EVENT_CONFIG.dateDisplay}</span>
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-champagne shrink-0" />
+              <span>{EVENT_CONFIG.venueName}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Centerpiece Steady 3D Luxury Envelope (Middle on Mobile | Right Showcase Stage on Laptop) */}
+        <div className="my-auto lg:my-0 flex items-center justify-center w-full py-3 lg:py-0 lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:row-span-2">
+          <div className="perspective-stage w-full max-w-[390px] sm:max-w-[460px] lg:max-w-[540px] xl:max-w-[600px] flex justify-center">
             <div
-              className="absolute inset-0 rounded-xl border border-champagne/45 overflow-hidden"
-              style={{
-                background:
-                  'linear-gradient(180deg, #2B0742 0%, #3E0D5C 60%, #2B0742 100%)',
-                zIndex: 4,
-              }}
+              ref={envelopeWrapRef}
+              onClick={handleOpenInvitation}
+              className={`preserve-3d relative w-[88vw] max-w-[380px] sm:max-w-[450px] lg:w-full lg:max-w-[530px] xl:max-w-[580px] aspect-[16/11] rounded-xl shadow-envelope transition-transform duration-300 ${
+                !isOpening ? 'cursor-pointer hover:scale-[1.018]' : ''
+              }`}
             >
+              {/* Warm Golden Aura Behind Envelope */}
               <div
-                className="absolute inset-0 opacity-25"
-                style={{
-                  backgroundImage:
-                    'radial-gradient(#D9B56E 0.8px, transparent 0.8px)',
-                  backgroundSize: '14px 14px',
-                }}
+                ref={innerGlowRef}
+                className="pointer-events-none absolute -inset-4 lg:-inset-8 rounded-3xl bg-champagne/20 blur-2xl opacity-30 lg:opacity-45"
+                style={{ zIndex: 1 }}
               />
-            </div>
 
-            {/* White Luxury Invitation Card Inside Envelope */}
-            <div
-              ref={cardRef}
-              className="vip-paper-surface absolute left-[6%] right-[6%] top-[8%] bottom-[8%] rounded-lg border border-champagne/65 px-4 py-3 sm:px-6 sm:py-4 flex flex-col items-center justify-between text-center shadow-md"
-              style={{ zIndex: 12 }}
-            >
-              <div className="w-full border border-champagne/45 rounded-md h-full px-3 py-2 flex flex-col items-center justify-center">
-                <div className="flex items-center justify-center gap-3 mb-1.5">
-                  <img
-                    src={EVENT_CONFIG.logos[0].purpleSrc}
-                    alt={EVENT_CONFIG.logos[0].shortName}
-                    className="h-6 sm:h-7 w-auto object-contain opacity-95"
-                  />
-                  <span className="h-5 w-[1px] bg-champagne/70" />
-                  <img
-                    src={EVENT_CONFIG.logos[2].purpleSrc}
-                    alt={EVENT_CONFIG.logos[2].shortName}
-                    className="h-5 sm:h-6 w-auto object-contain opacity-95"
-                  />
-                </div>
-                <span className="font-decorative text-[9px] sm:text-[10px] tracking-[0.26em] text-champagne-dark uppercase font-bold">
-                  {EVENT_CONFIG.kicker}
-                </span>
-                <h2 className="font-serif font-extrabold text-plum text-base sm:text-xl leading-tight mt-1">
-                  {EVENT_CONFIG.title}
-                </h2>
-                <p className="font-script text-royal text-xl sm:text-2xl leading-none mt-1">
-                  {EVENT_CONFIG.subtitle}
-                </p>
-                <div className="mt-2 h-[1px] w-16 bg-gradient-to-r from-transparent via-champagne to-transparent" />
-              </div>
-            </div>
-
-            {/* Envelope Left, Right & Bottom Folds */}
-            <div
-              className="foil-sheen pointer-events-none absolute inset-0 rounded-xl overflow-hidden"
-              style={{ zIndex: 20 }}
-            >
-              <svg
-                className="absolute inset-0 h-full w-full"
-                viewBox="0 0 400 275"
-                preserveAspectRatio="none"
-              >
-                <defs>
-                  <linearGradient id="sideFoldL" x1="0%" y1="0%" x2="100%" y2="50%">
-                    <stop offset="0%" stopColor="#6D248A" />
-                    <stop offset="100%" stopColor="#4A1263" />
-                  </linearGradient>
-                  <linearGradient id="sideFoldR" x1="100%" y1="0%" x2="0%" y2="50%">
-                    <stop offset="0%" stopColor="#652080" />
-                    <stop offset="100%" stopColor="#430F5B" />
-                  </linearGradient>
-                  <linearGradient id="bottomPocket" x1="50%" y1="0%" x2="50%" y2="100%">
-                    <stop offset="0%" stopColor="#772A96" />
-                    <stop offset="55%" stopColor="#581873" />
-                    <stop offset="100%" stopColor="#35094F" />
-                  </linearGradient>
-                </defs>
-
-                <polygon
-                  points="0,0 205,146 0,275"
-                  fill="url(#sideFoldL)"
-                  stroke="#D9B56E"
-                  strokeOpacity="0.48"
-                  strokeWidth="1"
-                />
-                <polygon
-                  points="400,0 195,146 400,275"
-                  fill="url(#sideFoldR)"
-                  stroke="#D9B56E"
-                  strokeOpacity="0.48"
-                  strokeWidth="1"
-                />
-                <polygon
-                  points="0,275 168,136 232,136 400,275"
-                  fill="url(#bottomPocket)"
-                  stroke="#D9B56E"
-                  strokeOpacity="0.78"
-                  strokeWidth="1.25"
-                />
-              </svg>
-
-              <div className="absolute inset-[7px] rounded-lg border border-champagne/40 pointer-events-none" />
-              <div className="absolute bottom-3 sm:bottom-3.5 inset-x-0 flex flex-col items-center justify-center pointer-events-none opacity-90">
-                <span className="text-gold-shimmer font-display text-[8px] sm:text-[9px] font-semibold tracking-[0.28em] uppercase">
-                  WAEN PAKISTAN • OFFICIAL INVITATION
-                </span>
-              </div>
-            </div>
-
-            {/* 3D Top Triangular Flap */}
-            <div
-              ref={flapRef}
-              className="preserve-3d origin-top-hinge pointer-events-none absolute inset-x-0 top-0 h-[58%]"
-              style={{ zIndex: 30 }}
-            >
-              <div className="backface-hidden absolute inset-0">
-                <svg
-                  className="h-full w-full drop-shadow-[0_10px_14px_rgba(22,3,38,0.48)]"
-                  viewBox="0 0 400 160"
-                  preserveAspectRatio="none"
-                >
-                  <defs>
-                    <linearGradient id="topFlapGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-                      <stop offset="0%" stopColor="#4F1569" />
-                      <stop offset="65%" stopColor="#6B2487" />
-                      <stop offset="100%" stopColor="#8130A1" />
-                    </linearGradient>
-                  </defs>
-                  <polygon
-                    points="0,0 400,0 214,150 186,150"
-                    fill="url(#topFlapGrad)"
-                    stroke="#D9B56E"
-                    strokeWidth="1.5"
-                    strokeOpacity="0.88"
-                  />
-                  <polyline
-                    points="14,6 190,141 210,141 386,6"
-                    fill="none"
-                    stroke="#F3DFAF"
-                    strokeWidth="0.9"
-                    strokeOpacity="0.58"
-                  />
-                </svg>
-              </div>
-
+              {/* Envelope Back & Satin Interior */}
               <div
-                className="backface-hidden absolute inset-0"
-                style={{ transform: 'rotateX(180deg)' }}
+                className="absolute inset-0 rounded-xl border border-champagne/45 overflow-hidden"
+                style={{
+                  background:
+                    'linear-gradient(180deg, #2B0742 0%, #3E0D5C 60%, #2B0742 100%)',
+                  zIndex: 4,
+                }}
               >
-                <svg
-                  className="h-full w-full"
-                  viewBox="0 0 400 160"
-                  preserveAspectRatio="none"
-                >
-                  <defs>
-                    <linearGradient id="flapInnerGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-                      <stop offset="0%" stopColor="#EDE2FA" />
-                      <stop offset="100%" stopColor="#D6BFEF" />
-                    </linearGradient>
-                  </defs>
-                  <polygon
-                    points="0,0 400,0 214,150 186,150"
-                    fill="url(#flapInnerGrad)"
-                    stroke="#D9B56E"
-                    strokeWidth="1.2"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            {/* Dispersion Particle Burst Anchor at Seal Center */}
-            <div
-              ref={burstContainerRef}
-              className="pointer-events-none absolute left-1/2 top-[53%] -translate-x-1/2 -translate-y-1/2"
-              style={{ zIndex: 42 }}
-              aria-hidden="true"
-            >
-              {burstParticles.map((bp) => (
-                <span
-                  key={bp.id}
-                  className="absolute rounded-full opacity-0"
+                <div
+                  className="absolute inset-0 opacity-25"
                   style={{
-                    width: `${bp.size}px`,
-                    height: `${bp.size}px`,
-                    backgroundColor: bp.isGold ? '#F5E4BC' : '#C27AE8',
+                    backgroundImage:
+                      'radial-gradient(#D9B56E 0.8px, transparent 0.8px)',
+                    backgroundSize: '14px 14px',
                   }}
                 />
-              ))}
-            </div>
-
-            {/* Circular Decorative Gold Medallion Seal */}
-            <div
-              className="pointer-events-none absolute left-1/2 top-[53%] -translate-x-1/2 -translate-y-1/2 h-16 w-16 sm:h-20 sm:w-20"
-              style={{ zIndex: 40 }}
-            >
-              <div
-                ref={sealGlowRef}
-                className="absolute inset-0 rounded-full bg-champagne/55 blur-md"
-              />
-
-              <div
-                ref={sealLeftRef}
-                className="absolute inset-0 overflow-hidden"
-                style={{
-                  clipPath: 'polygon(0 0, 52% 0, 48% 50%, 53% 100%, 0 100%)',
-                }}
-              >
-                <GoldSealDisc />
               </div>
 
+              {/* White Luxury Invitation Card Inside Envelope */}
               <div
-                ref={sealRightRef}
-                className="absolute inset-0 overflow-hidden"
-                style={{
-                  clipPath: 'polygon(52% 0, 100% 0, 100% 100%, 53% 100%, 48% 50%)',
-                }}
+                ref={cardRef}
+                className="vip-paper-surface absolute left-[6%] right-[6%] top-[8%] bottom-[8%] rounded-lg border border-champagne/65 px-4 py-3 sm:px-6 sm:py-4 flex flex-col items-center justify-between text-center shadow-md"
+                style={{ zIndex: 12 }}
               >
-                <GoldSealDisc />
+                <div className="w-full border border-champagne/45 rounded-md h-full px-3 py-2 flex flex-col items-center justify-center">
+                  <div className="flex items-center justify-center gap-3 mb-1.5">
+                    <img
+                      src={EVENT_CONFIG.logos[0].purpleSrc}
+                      alt={EVENT_CONFIG.logos[0].shortName}
+                      className="h-6 sm:h-7 lg:h-8 w-auto object-contain opacity-95"
+                    />
+                    <span className="h-5 w-[1px] bg-champagne/70" />
+                    <img
+                      src={EVENT_CONFIG.logos[2].purpleSrc}
+                      alt={EVENT_CONFIG.logos[2].shortName}
+                      className="h-5 sm:h-6 lg:h-7 w-auto object-contain opacity-95"
+                    />
+                  </div>
+                  <span className="font-decorative text-[9px] sm:text-[10px] tracking-[0.26em] text-champagne-dark uppercase font-bold">
+                    {EVENT_CONFIG.kicker}
+                  </span>
+                  <h2 className="font-serif font-extrabold text-plum text-base sm:text-xl lg:text-2xl leading-tight mt-1">
+                    {EVENT_CONFIG.title}
+                  </h2>
+                  <p className="font-script text-royal text-xl sm:text-2xl lg:text-3xl leading-none mt-1">
+                    {EVENT_CONFIG.subtitle}
+                  </p>
+                  <div className="mt-2 h-[1px] w-16 bg-gradient-to-r from-transparent via-champagne to-transparent" />
+                </div>
+              </div>
+
+              {/* Envelope Left, Right & Bottom Folds */}
+              <div
+                className="foil-sheen pointer-events-none absolute inset-0 rounded-xl overflow-hidden"
+                style={{ zIndex: 20 }}
+              >
+                <svg
+                  className="absolute inset-0 h-full w-full"
+                  viewBox="0 0 400 275"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <linearGradient id="sideFoldL" x1="0%" y1="0%" x2="100%" y2="50%">
+                      <stop offset="0%" stopColor="#6D248A" />
+                      <stop offset="100%" stopColor="#4A1263" />
+                    </linearGradient>
+                    <linearGradient id="sideFoldR" x1="100%" y1="0%" x2="0%" y2="50%">
+                      <stop offset="0%" stopColor="#652080" />
+                      <stop offset="100%" stopColor="#430F5B" />
+                    </linearGradient>
+                    <linearGradient id="bottomPocket" x1="50%" y1="0%" x2="50%" y2="100%">
+                      <stop offset="0%" stopColor="#772A96" />
+                      <stop offset="55%" stopColor="#581873" />
+                      <stop offset="100%" stopColor="#35094F" />
+                    </linearGradient>
+                  </defs>
+
+                  <polygon
+                    points="0,0 205,146 0,275"
+                    fill="url(#sideFoldL)"
+                    stroke="#D9B56E"
+                    strokeOpacity="0.48"
+                    strokeWidth="1"
+                  />
+                  <polygon
+                    points="400,0 195,146 400,275"
+                    fill="url(#sideFoldR)"
+                    stroke="#D9B56E"
+                    strokeOpacity="0.48"
+                    strokeWidth="1"
+                  />
+                  <polygon
+                    points="0,275 168,136 232,136 400,275"
+                    fill="url(#bottomPocket)"
+                    stroke="#D9B56E"
+                    strokeOpacity="0.78"
+                    strokeWidth="1.25"
+                  />
+                </svg>
+
+                <div className="absolute inset-[7px] rounded-lg border border-champagne/40 pointer-events-none" />
+                <div className="absolute bottom-3 sm:bottom-3.5 inset-x-0 flex flex-col items-center justify-center pointer-events-none opacity-90">
+                  <span className="text-gold-shimmer font-display text-[8px] sm:text-[9px] font-semibold tracking-[0.28em] uppercase">
+                    WAEN PAKISTAN • OFFICIAL INVITATION
+                  </span>
+                </div>
+              </div>
+
+              {/* 3D Top Triangular Flap */}
+              <div
+                ref={flapRef}
+                className="preserve-3d origin-top-hinge pointer-events-none absolute inset-x-0 top-0 h-[58%]"
+                style={{ zIndex: 30 }}
+              >
+                <div className="backface-hidden absolute inset-0">
+                  <svg
+                    className="h-full w-full drop-shadow-[0_10px_14px_rgba(22,3,38,0.48)]"
+                    viewBox="0 0 400 160"
+                    preserveAspectRatio="none"
+                  >
+                    <defs>
+                      <linearGradient id="topFlapGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+                        <stop offset="0%" stopColor="#4F1569" />
+                        <stop offset="65%" stopColor="#6B2487" />
+                        <stop offset="100%" stopColor="#8130A1" />
+                      </linearGradient>
+                    </defs>
+                    <polygon
+                      points="0,0 400,0 214,150 186,150"
+                      fill="url(#topFlapGrad)"
+                      stroke="#D9B56E"
+                      strokeWidth="1.5"
+                      strokeOpacity="0.88"
+                    />
+                    <polyline
+                      points="14,6 190,141 210,141 386,6"
+                      fill="none"
+                      stroke="#F3DFAF"
+                      strokeWidth="0.9"
+                      strokeOpacity="0.58"
+                    />
+                  </svg>
+                </div>
+
+                <div
+                  className="backface-hidden absolute inset-0"
+                  style={{ transform: 'rotateX(180deg)' }}
+                >
+                  <svg
+                    className="h-full w-full"
+                    viewBox="0 0 400 160"
+                    preserveAspectRatio="none"
+                  >
+                    <defs>
+                      <linearGradient id="flapInnerGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+                        <stop offset="0%" stopColor="#EDE2FA" />
+                        <stop offset="100%" stopColor="#D6BFEF" />
+                      </linearGradient>
+                    </defs>
+                    <polygon
+                      points="0,0 400,0 214,150 186,150"
+                      fill="url(#flapInnerGrad)"
+                      stroke="#D9B56E"
+                      strokeWidth="1.2"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Dispersion Particle Burst Anchor at Seal Center */}
+              <div
+                ref={burstContainerRef}
+                className="pointer-events-none absolute left-1/2 top-[53%] -translate-x-1/2 -translate-y-1/2"
+                style={{ zIndex: 42 }}
+                aria-hidden="true"
+              >
+                {burstParticles.map((bp) => (
+                  <span
+                    key={bp.id}
+                    className="absolute rounded-full opacity-0"
+                    style={{
+                      width: `${bp.size}px`,
+                      height: `${bp.size}px`,
+                      backgroundColor: bp.isGold ? '#F5E4BC' : '#C27AE8',
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Circular Decorative Gold Medallion Seal */}
+              <div
+                className="pointer-events-none absolute left-1/2 top-[53%] -translate-x-1/2 -translate-y-1/2 h-16 w-16 sm:h-20 sm:w-20 lg:h-22 lg:w-22"
+                style={{ zIndex: 40 }}
+              >
+                <div
+                  ref={sealGlowRef}
+                  className="absolute inset-0 rounded-full bg-champagne/55 blur-md"
+                />
+
+                <div
+                  ref={sealLeftRef}
+                  className="absolute inset-0 overflow-hidden"
+                  style={{
+                    clipPath: 'polygon(0 0, 52% 0, 48% 50%, 53% 100%, 0 100%)',
+                  }}
+                >
+                  <GoldSealDisc />
+                </div>
+
+                <div
+                  ref={sealRightRef}
+                  className="absolute inset-0 overflow-hidden"
+                  style={{
+                    clipPath: 'polygon(52% 0, 100% 0, 100% 100%, 53% 100%, 48% 50%)',
+                  }}
+                >
+                  <GoldSealDisc />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom Interactive Glowing CTA & Skip Button */}
-      <div
-        ref={controlsRef}
-        className="relative z-20 mb-2 sm:mb-4 lg:mb-6 flex flex-col items-center gap-3 w-full max-w-xs lg:max-w-sm"
-      >
-        <button
-          type="button"
-          onClick={handleOpenInvitation}
-          disabled={isOpening}
-          className="foil-sheen animate-pulse-glow group relative w-full py-3.5 px-7 rounded-full bg-gold-metallic text-plum-deep font-display font-bold text-xs sm:text-sm tracking-[0.2em] uppercase shadow-gold-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-2.5"
+        {/* Bottom Interactive Glowing CTA on Mobile | Left CTA Suite on Laptop */}
+        <div
+          ref={controlsRef}
+          className="mb-2 sm:mb-4 lg:mb-0 lg:mt-7 flex flex-col items-center lg:items-start gap-3 w-full max-w-xs lg:max-w-sm lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:self-start"
         >
-          <Sparkles className="w-4 h-4 text-plum" />
-          <span>OPEN YOUR INVITATION</span>
-        </button>
+          <button
+            type="button"
+            onClick={handleOpenInvitation}
+            disabled={isOpening}
+            className="foil-sheen animate-pulse-glow group relative w-full py-3.5 lg:py-4 px-7 rounded-full bg-gold-metallic text-plum-deep font-display font-bold text-xs sm:text-sm tracking-[0.2em] uppercase shadow-gold-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-2.5"
+          >
+            <Sparkles className="w-4 h-4 text-plum" />
+            <span>OPEN YOUR INVITATION</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={onSkip}
-          className="text-xs tracking-[0.16em] uppercase text-lavender/75 hover:text-champagne-light py-1.5 px-4 transition-colors underline underline-offset-4 decoration-champagne/40"
-        >
-          Skip Animation
-        </button>
+          <button
+            type="button"
+            onClick={onSkip}
+            className="text-xs tracking-[0.16em] uppercase text-lavender/75 hover:text-champagne-light py-1.5 px-4 lg:px-1 transition-colors underline underline-offset-4 decoration-champagne/40"
+          >
+            Skip Animation
+          </button>
+        </div>
       </div>
     </div>
   )

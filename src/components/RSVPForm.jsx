@@ -10,10 +10,7 @@ import {
   Plus,
   Settings2,
 } from 'lucide-react'
-import {
-  buildRSVPMessage,
-  openWhatsAppRSVP,
-} from '../utils/whatsapp'
+import { buildRSVPMessage, openWhatsAppRSVP } from '../utils/whatsapp'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -34,20 +31,41 @@ export default function RSVPForm({
   waConfig,
   onOpenOrganizerSetup,
   sectionId = 'rsvp-section',
+  idPrefix = 'mobile',
+  variant = 'mobile',
+  formValues,
+  onFormValuesChange,
 }) {
   const sectionRef = useRef(null)
   const panelRef = useRef(null)
 
-  const [fullName, setFullName] = useState('')
-  const [institution, setInstitution] = useState('')
-  const [designation, setDesignation] = useState('')
-  const [attendees, setAttendees] = useState(1)
+  const [localValues, setLocalValues] = useState({
+    fullName: '',
+    institution: '',
+    designation: '',
+    attendees: 1,
+  })
+
+  const values = formValues || localValues
+  const updateValues = (patch) => {
+    if (onFormValuesChange) {
+      onFormValuesChange((prev) => ({ ...prev, ...patch }))
+    } else {
+      setLocalValues((prev) => ({ ...prev, ...patch }))
+    }
+  }
+
+  const { fullName, institution, designation, attendees } = values
 
   const [errors, setErrors] = useState({})
   const [whatsappOpened, setWhatsappOpened] = useState(false)
   const [copiedMessage, setCopiedMessage] = useState(false)
 
+  const isDesktop = variant === 'desktop'
+
   useEffect(() => {
+    if (isDesktop) return
+
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches
@@ -76,7 +94,7 @@ export default function RSVPForm({
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [isDesktop])
 
   const validateFields = () => {
     const nextErrors = {}
@@ -148,43 +166,67 @@ export default function RSVPForm({
   }
 
   const adjustAttendees = (delta) => {
-    setAttendees((prev) => {
-      const current = Number(prev) || 1
-      return Math.min(25, Math.max(1, current + delta))
-    })
+    const current = Number(attendees) || 1
+    updateValues({ attendees: Math.min(25, Math.max(1, current + delta)) })
   }
+
+  const nameId = `${idPrefix}-rsvp-full-name`
+  const instId = `${idPrefix}-rsvp-institution`
+  const desigId = `${idPrefix}-rsvp-designation`
+  const attId = `${idPrefix}-rsvp-attendees`
+  const headingId = `${idPrefix}-rsvp-heading`
+  const errNameId = `${idPrefix}-err-full-name`
+  const errInstId = `${idPrefix}-err-institution`
 
   return (
     <section
       id={sectionId}
       ref={sectionRef}
-      aria-labelledby="rsvp-heading"
-      className="relative px-4 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10 lg:p-0 scroll-mt-6"
+      aria-labelledby={headingId}
+      className={
+        isDesktop
+          ? 'relative w-full'
+          : 'relative px-4 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10 scroll-mt-6'
+      }
     >
       <div
         ref={panelRef}
-        className="rounded-3xl border border-champagne/65 bg-gradient-to-b from-lavender/50 via-white to-lavender/40 p-5 min-[375px]:p-6 sm:p-9 shadow-luxury"
+        className={
+          isDesktop
+            ? 'rounded-2xl border border-champagne/75 bg-gradient-to-b from-white via-white to-lavender/45 p-6 xl:p-7 shadow-[0_18px_45px_rgba(12,2,24,0.35)] text-plum'
+            : 'rounded-3xl border border-champagne/65 bg-gradient-to-b from-lavender/50 via-white to-lavender/40 p-5 min-[375px]:p-6 sm:p-9 shadow-luxury'
+        }
       >
-        <div className="text-center max-w-lg mx-auto">
-          <span className="inline-block text-gold-shimmer font-decorative text-[11px] sm:text-xs font-bold tracking-[0.26em] uppercase">
-            VIP Attendance Registration
-          </span>
-          <h2
-            id="rsvp-heading"
-            className="mt-1 font-serif text-3xl sm:text-4xl font-extrabold text-royal-shimmer"
-          >
+        {!isDesktop && (
+          <div className="text-center max-w-lg mx-auto">
+            <span className="inline-block text-gold-shimmer font-decorative text-[11px] sm:text-xs font-bold tracking-[0.26em] uppercase">
+              VIP Attendance Registration
+            </span>
+            <h2
+              id={headingId}
+              className="mt-1 font-serif text-3xl sm:text-4xl font-extrabold text-royal-shimmer"
+            >
+              Reserve Your Presence
+            </h2>
+            <p className="mt-2 font-sans text-sm sm:text-base text-plum/80">
+              Kindly confirm your participation by providing your details below.
+            </p>
+          </div>
+        )}
+
+        {isDesktop && (
+          <h2 id={headingId} className="sr-only">
             Reserve Your Presence
           </h2>
-          <p className="mt-2 font-sans text-sm sm:text-base text-plum/80">
-            Kindly confirm your participation by providing your details below.
-          </p>
-        </div>
+        )}
 
         {/* Clear Configuration Notice when WAEN WhatsApp number is not supplied yet */}
         {!waConfig.isConfigured && (
           <div
             role="status"
-            className="mt-6 rounded-2xl border border-amber-500/45 bg-amber-50/90 p-4 text-left text-plum shadow-sm"
+            className={`${
+              isDesktop ? 'mb-4' : 'mt-6'
+            } rounded-2xl border border-amber-500/45 bg-amber-50/90 p-4 text-left text-plum shadow-sm`}
           >
             <div className="flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-amber-700 shrink-0 mt-0.5" />
@@ -195,7 +237,11 @@ export default function RSVPForm({
                 <p className="mt-1 text-amber-900/90">
                   To protect guests from sending RSVPs to an unverified number, direct
                   WhatsApp redirection is paused until the official WAEN WhatsApp
-                  number is set via <code className="font-mono text-[11px] bg-amber-100 px-1.5 py-0.5 rounded">VITE_WAEN_WHATSAPP_NUMBER</code> or an organizer invitation link.
+                  number is set via{' '}
+                  <code className="font-mono text-[11px] bg-amber-100 px-1.5 py-0.5 rounded">
+                    VITE_WAEN_WHATSAPP_NUMBER
+                  </code>{' '}
+                  or an organizer invitation link.
                 </p>
                 <button
                   type="button"
@@ -210,37 +256,47 @@ export default function RSVPForm({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate className="mt-6 sm:mt-7 space-y-4 sm:space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className={
+            isDesktop
+              ? 'space-y-4'
+              : 'mt-6 sm:mt-7 space-y-4 sm:space-y-5'
+          }
+        >
           {/* Full Name (Required) */}
           <div>
             <label
-              htmlFor="rsvp-full-name"
+              htmlFor={nameId}
               className="block text-xs sm:text-sm font-semibold tracking-wide text-plum mb-1.5"
             >
               Full Name <span className="text-royal">*</span>
             </label>
             <input
-              id="rsvp-full-name"
+              id={nameId}
               name="fullName"
               type="text"
               required
               autoComplete="name"
               value={fullName}
               onChange={(e) => {
-                setFullName(e.target.value)
+                updateValues({ fullName: e.target.value })
                 if (errors.fullName) setErrors({ ...errors, fullName: null })
               }}
               placeholder="e.g., Dr. Ayesha Siddiqui"
               aria-invalid={Boolean(errors.fullName)}
-              aria-describedby={errors.fullName ? 'err-full-name' : undefined}
-              className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-base text-plum placeholder:text-plum/40 shadow-sm outline-none transition-all focus:ring-2 ${
+              aria-describedby={errors.fullName ? errNameId : undefined}
+              className={`w-full rounded-xl border bg-white px-4 ${
+                isDesktop ? 'py-3 text-sm xl:text-base' : 'rounded-2xl py-3.5 text-base'
+              } text-plum placeholder:text-plum/40 shadow-sm outline-none transition-all focus:ring-2 ${
                 errors.fullName
                   ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
                   : 'border-champagne/65 focus:border-royal focus:ring-royal/20'
               }`}
             />
             {errors.fullName && (
-              <p id="err-full-name" className="mt-1.5 text-xs font-medium text-red-600">
+              <p id={errNameId} className="mt-1.5 text-xs font-medium text-red-600">
                 {errors.fullName}
               </p>
             )}
@@ -249,91 +305,103 @@ export default function RSVPForm({
           {/* School / Institution Name (Required) */}
           <div>
             <label
-              htmlFor="rsvp-institution"
+              htmlFor={instId}
               className="block text-xs sm:text-sm font-semibold tracking-wide text-plum mb-1.5"
             >
               School / Institution Name <span className="text-royal">*</span>
             </label>
             <input
-              id="rsvp-institution"
+              id={instId}
               name="institution"
               type="text"
               required
               autoComplete="organization"
               value={institution}
               onChange={(e) => {
-                setInstitution(e.target.value)
+                updateValues({ institution: e.target.value })
                 if (errors.institution) setErrors({ ...errors, institution: null })
               }}
               placeholder="Your School / Institution Name"
               aria-invalid={Boolean(errors.institution)}
-              aria-describedby={errors.institution ? 'err-institution' : undefined}
-              className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-base text-plum placeholder:text-plum/40 shadow-sm outline-none transition-all focus:ring-2 ${
+              aria-describedby={errors.institution ? errInstId : undefined}
+              className={`w-full rounded-xl border bg-white px-4 ${
+                isDesktop ? 'py-3 text-sm xl:text-base' : 'rounded-2xl py-3.5 text-base'
+              } text-plum placeholder:text-plum/40 shadow-sm outline-none transition-all focus:ring-2 ${
                 errors.institution
                   ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
                   : 'border-champagne/65 focus:border-royal focus:ring-royal/20'
               }`}
             />
             {errors.institution && (
-              <p id="err-institution" className="mt-1.5 text-xs font-medium text-red-600">
+              <p id={errInstId} className="mt-1.5 text-xs font-medium text-red-600">
                 {errors.institution}
               </p>
             )}
           </div>
 
           {/* Designation & Number of Attendees Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
             <div className="sm:col-span-3">
               <label
-                htmlFor="rsvp-designation"
+                htmlFor={desigId}
                 className="block text-xs sm:text-sm font-semibold tracking-wide text-plum mb-1.5"
               >
                 Designation{' '}
                 <span className="font-normal text-plum/55">(Optional)</span>
               </label>
               <input
-                id="rsvp-designation"
+                id={desigId}
                 name="designation"
                 type="text"
                 autoComplete="organization-title"
                 value={designation}
-                onChange={(e) => setDesignation(e.target.value)}
+                onChange={(e) => updateValues({ designation: e.target.value })}
                 placeholder="e.g., Principal / Head of Academics"
-                className="w-full rounded-2xl border border-champagne/65 bg-white px-4 py-3.5 text-base text-plum placeholder:text-plum/40 shadow-sm outline-none transition-all focus:border-royal focus:ring-2 focus:ring-royal/20"
+                className={`w-full rounded-xl border border-champagne/65 bg-white px-4 ${
+                  isDesktop ? 'py-3 text-sm xl:text-base' : 'rounded-2xl py-3.5 text-base'
+                } text-plum placeholder:text-plum/40 shadow-sm outline-none transition-all focus:border-royal focus:ring-2 focus:ring-royal/20`}
               />
             </div>
 
             <div className="sm:col-span-2">
               <label
-                htmlFor="rsvp-attendees"
+                htmlFor={attId}
                 className="block text-xs sm:text-sm font-semibold tracking-wide text-plum mb-1.5"
               >
                 Number of Attendees
               </label>
-              <div className="flex items-center rounded-2xl border border-champagne/65 bg-white p-1 shadow-sm focus-within:border-royal focus-within:ring-2 focus-within:ring-royal/20">
+              <div
+                className={`flex items-center ${
+                  isDesktop ? 'rounded-xl p-0.5' : 'rounded-2xl p-1'
+                } border border-champagne/65 bg-white shadow-sm focus-within:border-royal focus-within:ring-2 focus-within:ring-royal/20`}
+              >
                 <button
                   type="button"
                   onClick={() => adjustAttendees(-1)}
                   aria-label="Decrease number of attendees"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-royal hover:bg-lavender/70 active:scale-95 transition"
+                  className={`flex ${
+                    isDesktop ? 'h-10 w-9' : 'h-11 w-11'
+                  } shrink-0 items-center justify-center rounded-lg text-royal hover:bg-lavender/70 active:scale-95 transition`}
                 >
                   <Minus className="h-4 w-4" />
                 </button>
                 <input
-                  id="rsvp-attendees"
+                  id={attId}
                   name="attendees"
                   type="number"
                   min={1}
                   max={25}
                   value={attendees}
-                  onChange={(e) => setAttendees(e.target.value)}
+                  onChange={(e) => updateValues({ attendees: e.target.value })}
                   className="w-full bg-transparent text-center text-base font-semibold text-plum outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
                 <button
                   type="button"
                   onClick={() => adjustAttendees(1)}
                   aria-label="Increase number of attendees"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-royal hover:bg-lavender/70 active:scale-95 transition"
+                  className={`flex ${
+                    isDesktop ? 'h-10 w-9' : 'h-11 w-11'
+                  } shrink-0 items-center justify-center rounded-lg text-royal hover:bg-lavender/70 active:scale-95 transition`}
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -353,11 +421,13 @@ export default function RSVPForm({
           )}
 
           {/* Primary Confirm via WhatsApp CTA */}
-          <div className="pt-2 space-y-3">
+          <div className="pt-1.5 space-y-2.5">
             <button
               type="submit"
               disabled={!waConfig.isConfigured}
-              className={`w-full rounded-2xl px-6 py-4 text-sm sm:text-base font-bold tracking-[0.14em] uppercase transition-all duration-300 flex items-center justify-center gap-3 min-h-[56px] shadow-md ${
+              className={`w-full rounded-xl px-6 ${
+                isDesktop ? 'py-3.5 min-h-[52px] text-sm' : 'rounded-2xl py-4 min-h-[56px] text-sm sm:text-base'
+              } font-bold tracking-[0.14em] uppercase transition-all duration-300 flex items-center justify-center gap-3 shadow-md ${
                 waConfig.isConfigured
                   ? 'foil-sheen bg-gradient-to-r from-royal via-royal-light to-plum text-white hover:shadow-luxury hover:scale-[1.01] active:scale-[0.99] border border-champagne/75'
                   : 'bg-plum/25 text-plum/55 cursor-not-allowed border border-plum/15 shadow-none'
@@ -374,7 +444,9 @@ export default function RSVPForm({
             <button
               type="button"
               onClick={handleCopyFallback}
-              className="w-full rounded-2xl border border-champagne/65 bg-white hover:bg-lavender/50 active:scale-[0.99] px-5 py-3.5 text-xs sm:text-sm font-semibold tracking-wider uppercase text-royal transition-all flex items-center justify-center gap-2 min-h-[48px]"
+              className={`w-full ${
+                isDesktop ? 'rounded-xl py-2.5 min-h-[42px] text-xs' : 'rounded-2xl py-3.5 min-h-[48px] text-xs sm:text-sm'
+              } border border-champagne/65 bg-white hover:bg-lavender/50 active:scale-[0.99] px-5 font-semibold tracking-wider uppercase text-royal transition-all flex items-center justify-center gap-2`}
             >
               {copiedMessage ? (
                 <>
@@ -392,11 +464,11 @@ export default function RSVPForm({
             </button>
           </div>
 
-          {/* Honest Post-Click Guidance (Does NOT falsely claim message was delivered) */}
+          {/* Honest Post-Click Guidance */}
           {whatsappOpened && (
             <div
               role="status"
-              className="rounded-2xl border border-royal/30 bg-lavender/65 p-4 text-xs sm:text-sm text-plum leading-relaxed"
+              className="rounded-xl border border-royal/30 bg-lavender/65 p-3.5 text-xs sm:text-sm text-plum leading-relaxed"
             >
               <p className="font-semibold text-royal">
                 Complete Your Confirmation Inside WhatsApp
@@ -413,4 +485,3 @@ export default function RSVPForm({
     </section>
   )
 }
-

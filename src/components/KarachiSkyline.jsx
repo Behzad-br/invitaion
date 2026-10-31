@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useId, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -10,7 +10,13 @@ gsap.registerPlugin(ScrollTrigger)
  * with a glowing golden ceremonial halo, twinkling sky stars, Frere Hall spires,
  * Merewether Clock Tower, silk ribbons, and mirrored water reflection.
  */
-export default function KarachiSkyline() {
+export default function KarachiSkyline({
+  variant = 'mobile',
+  isRevealed = true,
+}) {
+  const rawId = useId()
+  const uid = rawId.replace(/[^a-zA-Z0-9_-]/g, '')
+
   const containerRef = useRef(null)
   const skylineGroupRef = useRef(null)
   const haloRef = useRef(null)
@@ -20,7 +26,11 @@ export default function KarachiSkyline() {
   const goldStroke1Ref = useRef(null)
   const goldStroke2Ref = useRef(null)
 
+  const isDesktop = variant === 'desktop'
+
   useEffect(() => {
+    if (isDesktop && !isRevealed) return
+
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches
@@ -65,7 +75,40 @@ export default function KarachiSkyline() {
         })
       }
 
-      // Skyline rises smoothly and quickly into view
+      if (isDesktop) {
+        // Immediate brisk reveal on laptop showcase panel (no scroll dependency)
+        gsap.fromTo(
+          skylineGroupRef.current,
+          { y: 14, opacity: 0.35 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out', delay: 0.15 }
+        )
+        gsap.fromTo(
+          buildings,
+          { y: 12, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.42,
+            stagger: 0.035,
+            ease: 'power2.out',
+            delay: 0.18,
+          }
+        )
+        gsap.fromTo(
+          reflectionRef.current,
+          { opacity: 0, scaleY: 0.85 },
+          {
+            opacity: 0.55,
+            scaleY: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+            delay: 0.25,
+          }
+        )
+        return
+      }
+
+      // Mobile / Tablet scroll-triggered entrance
       gsap.fromTo(
         skylineGroupRef.current,
         { y: 18, opacity: 0.4 },
@@ -82,7 +125,6 @@ export default function KarachiSkyline() {
         }
       )
 
-      // Buildings reveal briskly from left to right
       gsap.fromTo(
         buildings,
         { y: 14, opacity: 0 },
@@ -100,7 +142,6 @@ export default function KarachiSkyline() {
         }
       )
 
-      // Subtle light reflection fades in underneath
       gsap.fromTo(
         reflectionRef.current,
         { opacity: 0, scaleY: 0.85 },
@@ -117,7 +158,6 @@ export default function KarachiSkyline() {
         }
       )
 
-      // Flowing purple ribbons move at different speeds on scroll
       gsap.to(ribbonBackRef.current, {
         x: -26,
         y: -10,
@@ -142,7 +182,6 @@ export default function KarachiSkyline() {
         },
       })
 
-      // Fine gold lines animate along ribbon edges
       ;[goldStroke1Ref.current, goldStroke2Ref.current].forEach((pathEl) => {
         if (!pathEl) return
         const length = pathEl.getTotalLength ? pathEl.getTotalLength() : 1200
@@ -164,15 +203,28 @@ export default function KarachiSkyline() {
     }, containerRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [isDesktop, isRevealed])
+
+  const ids = {
+    skyGlow: `skyGlow-${uid}`,
+    mazarAura: `mazarAura-${uid}`,
+    farSkyline: `farSkyline-${uid}`,
+    midSkyline: `midSkyline-${uid}`,
+    mazarGrad: `mazarGrad-${uid}`,
+    ribbonSilkA: `ribbonSilkA-${uid}`,
+    goldEdge: `goldEdge-${uid}`,
+    waterReflect: `waterReflect-${uid}`,
+  }
 
   return (
     <section
       ref={containerRef}
       aria-label="Karachi Architectural Heritage Illustration"
-      className="relative pt-4 pb-2 overflow-hidden select-none"
+      className={`relative overflow-hidden select-none ${
+        isDesktop ? 'pt-2 pb-0' : 'pt-4 pb-2'
+      }`}
     >
-      <div className="text-center px-4 mb-2">
+      <div className={`text-center px-4 ${isDesktop ? 'mb-1' : 'mb-2'}`}>
         <span className="inline-block text-gold-shimmer font-decorative text-[10px] sm:text-xs font-bold tracking-[0.26em] uppercase">
           Celebrating Educational Excellence in Karachi
         </span>
@@ -181,55 +233,55 @@ export default function KarachiSkyline() {
       <div className="relative w-full">
         <svg
           className="w-full h-auto block"
-          viewBox="0 0 1200 310"
+          viewBox={isDesktop ? '0 22 1200 262' : '0 0 1200 310'}
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           role="img"
           aria-label="Purple and gold Karachi skyline featuring Mazar-e-Quaid"
         >
           <defs>
-            <linearGradient id="skyGlow" x1="50%" y1="0%" x2="50%" y2="100%">
+            <linearGradient id={ids.skyGlow} x1="50%" y1="0%" x2="50%" y2="100%">
               <stop offset="0%" stopColor="#EDE2FA" stopOpacity="0" />
               <stop offset="65%" stopColor="#E1CEF7" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#652080" stopOpacity="0.22" />
             </linearGradient>
 
-            <radialGradient id="mazarAura" cx="50%" cy="50%" r="50%">
+            <radialGradient id={ids.mazarAura} cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#F5E4BC" stopOpacity="0.62" />
               <stop offset="55%" stopColor="#D9B56E" stopOpacity="0.22" />
               <stop offset="100%" stopColor="#EDE2FA" stopOpacity="0" />
             </radialGradient>
 
-            <linearGradient id="farSkyline" x1="50%" y1="0%" x2="50%" y2="100%">
+            <linearGradient id={ids.farSkyline} x1="50%" y1="0%" x2="50%" y2="100%">
               <stop offset="0%" stopColor="#9B62B8" stopOpacity="0.4" />
               <stop offset="100%" stopColor="#652080" stopOpacity="0.58" />
             </linearGradient>
 
-            <linearGradient id="midSkyline" x1="50%" y1="0%" x2="50%" y2="100%">
+            <linearGradient id={ids.midSkyline} x1="50%" y1="0%" x2="50%" y2="100%">
               <stop offset="0%" stopColor="#6F258C" />
               <stop offset="100%" stopColor="#35094F" />
             </linearGradient>
 
-            <linearGradient id="mazarGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+            <linearGradient id={ids.mazarGrad} x1="50%" y1="0%" x2="50%" y2="100%">
               <stop offset="0%" stopColor="#8130A1" />
               <stop offset="55%" stopColor="#581873" />
               <stop offset="100%" stopColor="#35094F" />
             </linearGradient>
 
-            <linearGradient id="ribbonSilkA" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient id={ids.ribbonSilkA} x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#652080" stopOpacity="0.14" />
               <stop offset="50%" stopColor="#8634A8" stopOpacity="0.28" />
               <stop offset="100%" stopColor="#35094F" stopOpacity="0.14" />
             </linearGradient>
 
-            <linearGradient id="goldEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient id={ids.goldEdge} x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#D9B56E" stopOpacity="0.1" />
               <stop offset="30%" stopColor="#F5E4BC" stopOpacity="0.95" />
               <stop offset="70%" stopColor="#D9B56E" stopOpacity="0.95" />
               <stop offset="100%" stopColor="#D9B56E" stopOpacity="0.1" />
             </linearGradient>
 
-            <linearGradient id="waterReflect" x1="50%" y1="0%" x2="50%" y2="100%">
+            <linearGradient id={ids.waterReflect} x1="50%" y1="0%" x2="50%" y2="100%">
               <stop offset="0%" stopColor="#652080" stopOpacity="0.35" />
               <stop offset="50%" stopColor="#D9B56E" stopOpacity="0.18" />
               <stop offset="100%" stopColor="#EDE2FA" stopOpacity="0" />
@@ -237,7 +289,7 @@ export default function KarachiSkyline() {
           </defs>
 
           {/* Soft Lavender Horizon Glow */}
-          <rect x="0" y="15" width="1200" height="230" fill="url(#skyGlow)" />
+          <rect x="0" y="15" width="1200" height="230" fill={`url(#${ids.skyGlow})`} />
 
           {/* Twinkling Golden Sky Stars */}
           <g fill="#D9B56E">
@@ -252,7 +304,7 @@ export default function KarachiSkyline() {
 
           {/* Radiant Golden Halo Behind Mazar-e-Quaid */}
           <g ref={haloRef}>
-            <circle cx="605" cy="155" r="108" fill="url(#mazarAura)" />
+            <circle cx="605" cy="155" r="108" fill={`url(#${ids.mazarAura})`} />
             <circle
               cx="605"
               cy="155"
@@ -268,12 +320,12 @@ export default function KarachiSkyline() {
           <g ref={ribbonBackRef}>
             <path
               d="M-80,145 C210,65 490,205 810,120 C1010,68 1140,115 1290,95 L1290,245 L-80,245 Z"
-              fill="url(#ribbonSilkA)"
+              fill={`url(#${ids.ribbonSilkA})`}
             />
             <path
               ref={goldStroke1Ref}
               d="M-80,145 C210,65 490,205 810,120 C1010,68 1140,115 1290,95"
-              stroke="url(#goldEdge)"
+              stroke={`url(#${ids.goldEdge})`}
               strokeWidth="1.5"
               fill="none"
             />
@@ -284,16 +336,16 @@ export default function KarachiSkyline() {
             <path
               className="skyline-building"
               d="M40,240 L40,185 L72,185 L72,162 L106,162 L106,240 Z M185,240 L185,152 L222,152 L222,240 Z M860,240 L860,156 L902,156 L902,240 Z M1045,240 L1045,168 L1088,168 L1088,190 L1120,190 L1120,240 Z"
-              fill="url(#farSkyline)"
+              fill={`url(#${ids.farSkyline})`}
             />
 
             {/* 1. Clifton Coastal Towers */}
             <g className="skyline-building">
               <path
                 d="M78,240 L78,136 L96,122 L114,136 L114,240 Z"
-                fill="url(#midSkyline)"
+                fill={`url(#${ids.midSkyline})`}
               />
-              <rect x="122" y="150" width="34" height="90" fill="url(#midSkyline)" />
+              <rect x="122" y="150" width="34" height="90" fill={`url(#${ids.midSkyline})`} />
               <line x1="96" y1="108" x2="96" y2="122" stroke="#D9B56E" strokeWidth="1.3" />
             </g>
 
@@ -301,7 +353,7 @@ export default function KarachiSkyline() {
             <g className="skyline-building">
               <path
                 d="M196,240 L196,158 L204,158 L204,130 L215,96 L226,130 L226,158 L234,158 L234,240 Z"
-                fill="url(#midSkyline)"
+                fill={`url(#${ids.midSkyline})`}
               />
               <circle cx="215" cy="144" r="5" fill="#EDE2FA" fillOpacity="0.88" />
             </g>
@@ -310,7 +362,7 @@ export default function KarachiSkyline() {
             <g className="skyline-building">
               <path
                 d="M262,240 L262,126 L312,126 L312,240 Z"
-                fill="url(#midSkyline)"
+                fill={`url(#${ids.midSkyline})`}
               />
               <rect x="272" y="114" width="20" height="12" fill="#4D1566" />
               <line x1="282" y1="96" x2="282" y2="114" stroke="#D9B56E" strokeWidth="1.2" />
@@ -321,7 +373,7 @@ export default function KarachiSkyline() {
             <g className="skyline-building">
               <path
                 d="M382,240 L382,174 L394,146 L406,174 L466,174 L476,152 L486,174 L496,240 Z"
-                fill="url(#midSkyline)"
+                fill={`url(#${ids.midSkyline})`}
               />
               <path
                 d="M416,240 L416,204 C416,194 428,194 428,204 L428,240 Z M440,240 L440,204 C440,194 452,194 452,204 L452,240 Z"
@@ -337,7 +389,7 @@ export default function KarachiSkyline() {
 
               <path
                 d="M558,136 C558,92 652,92 652,136 Z"
-                fill="url(#mazarGrad)"
+                fill={`url(#${ids.mazarGrad})`}
                 stroke="#D9B56E"
                 strokeWidth="1.5"
               />
@@ -346,7 +398,7 @@ export default function KarachiSkyline() {
 
               <polygon
                 points="546,208 554,136 656,136 664,208"
-                fill="url(#mazarGrad)"
+                fill={`url(#${ids.mazarGrad})`}
                 stroke="#D9B56E"
                 strokeOpacity="0.7"
                 strokeWidth="1.2"
@@ -365,7 +417,7 @@ export default function KarachiSkyline() {
             <g className="skyline-building">
               <path
                 d="M726,240 L726,178 L758,178 L758,140 L770,115 L782,140 L782,178 L814,178 L814,240 Z"
-                fill="url(#midSkyline)"
+                fill={`url(#${ids.midSkyline})`}
               />
             </g>
 
@@ -373,7 +425,7 @@ export default function KarachiSkyline() {
             <g className="skyline-building">
               <path
                 d="M838,240 L838,116 L868,108 L882,116 L882,240 Z"
-                fill="url(#midSkyline)"
+                fill={`url(#${ids.midSkyline})`}
               />
               <line x1="862" y1="88" x2="862" y2="109" stroke="#D9B56E" strokeWidth="1.4" />
               <rect x="910" y="142" width="44" height="98" fill="#4B1364" />
@@ -383,7 +435,7 @@ export default function KarachiSkyline() {
             <g className="skyline-building">
               <path
                 d="M972,240 L972,130 C972,116 1012,116 1012,130 L1012,240 Z"
-                fill="url(#midSkyline)"
+                fill={`url(#${ids.midSkyline})`}
               />
               <rect x="1024" y="160" width="46" height="80" fill="#581873" />
               <rect x="1080" y="178" width="42" height="62" fill="#430F5B" />
@@ -400,7 +452,7 @@ export default function KarachiSkyline() {
             <path
               ref={goldStroke2Ref}
               d="M-60,236 C280,210 580,254 910,222 C1065,207 1165,226 1260,218"
-              stroke="url(#goldEdge)"
+              stroke={`url(#${ids.goldEdge})`}
               strokeWidth="1.7"
               fill="none"
             />
@@ -412,13 +464,13 @@ export default function KarachiSkyline() {
             y1="240"
             x2="1160"
             y2="240"
-            stroke="url(#goldEdge)"
+            stroke={`url(#${ids.goldEdge})`}
             strokeWidth="1.6"
           />
 
           {/* Subtle Mirrored Light Reflection Underneath */}
           <g ref={reflectionRef} style={{ transformOrigin: '600px 240px' }}>
-            <ellipse cx="600" cy="256" rx="510" ry="18" fill="url(#waterReflect)" />
+            <ellipse cx="600" cy="256" rx="510" ry="18" fill={`url(#${ids.waterReflect})`} />
             <ellipse cx="605" cy="264" rx="150" ry="16" fill="#D9B56E" fillOpacity="0.2" />
             <line
               x1="280"
