@@ -207,14 +207,14 @@ export default function InvitationReveal({ isRevealed }) {
           {EVENT_CONFIG.title}
         </h1>
 
-        {/* Calligraphic Script Subheading: Karachi Launch Ceremony */}
-        <div ref={subtitleRef} className="mt-2 sm:mt-3 lg:mt-4 flex flex-col items-center">
-          <p className="font-script text-[2.4rem] leading-[1.15] min-[375px]:text-[2.7rem] sm:text-[3.5rem] lg:text-[4.1rem] text-royal px-2">
+        {/* Clean Straight Subheading: Karachi Launch Ceremony */}
+        <div ref={subtitleRef} className="mt-2.5 sm:mt-3.5 flex flex-col items-center">
+          <p className="font-sans font-bold text-lg min-[375px]:text-xl sm:text-2xl text-royal tracking-wide px-2">
             {EVENT_CONFIG.subtitle}
           </p>
 
           <svg
-            className="w-48 sm:w-64 lg:w-80 h-5 lg:h-6 -mt-0.5 text-champagne"
+            className="w-44 sm:w-60 h-4 mt-1 text-champagne"
             viewBox="0 0 260 22"
             fill="none"
             aria-hidden="true"

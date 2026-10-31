@@ -32,7 +32,7 @@ export default function Footer({ onReopenInvitation }) {
           />
         </div>
 
-        <p className="mt-4 font-script text-champagne-light text-2xl sm:text-3xl">
+        <p className="mt-4 font-sans font-bold text-champagne-light text-sm sm:text-base tracking-wide">
           Western Australian Curriculum • Kindergarten to Year 12
         </p>
 

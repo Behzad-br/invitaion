@@ -28,11 +28,11 @@ export default {
         },
       },
       fontFamily: {
-        serif: ['"Playfair Display"', 'Georgia', 'serif'],
-        script: ['"Great Vibes"', 'cursive'],
-        display: ['"Cinzel"', 'Georgia', 'serif'],
-        decorative: ['"Cinzel Decorative"', '"Cinzel"', 'Georgia', 'serif'],
-        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        serif: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        script: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        decorative: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
         'luxury': '0 28px 70px -15px rgba(53, 9, 79, 0.22), 0 10px 28px -6px rgba(217, 181, 110, 0.18)',

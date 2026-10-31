@@ -331,9 +331,9 @@ export default function DesktopInvitationView({
               {EVENT_CONFIG.title}
             </h1>
 
-            {/* Calligraphic Script Subtitle + Gold Flourish */}
-            <div className="mt-1.5 flex items-center gap-4 flex-wrap">
-              <p className="font-script text-[2.55rem] xl:text-[3.1rem] leading-[1.1] text-royal">
+            {/* Clean Straight Subtitle + Gold Flourish */}
+            <div className="mt-2 flex items-center gap-4 flex-wrap">
+              <p className="font-sans font-bold text-xl xl:text-2xl tracking-wide text-royal">
                 {EVENT_CONFIG.subtitle}
               </p>
               <svg
@@ -607,7 +607,7 @@ export default function DesktopInvitationView({
           </span>
         </div>
 
-        <div className="font-script text-xl text-champagne-light">
+        <div className="font-sans font-semibold text-xs xl:text-sm tracking-wide text-champagne-light">
           Western Australian Curriculum • Kindergarten to Year 12
         </div>
       </footer>

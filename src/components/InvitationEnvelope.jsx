@@ -435,7 +435,7 @@ export default function InvitationEnvelope({
             {EVENT_CONFIG.title}
           </h1>
 
-          <p className="font-script text-3xl sm:text-4xl lg:text-[2.65rem] xl:text-5xl text-champagne-light mt-0.5 lg:mt-2">
+          <p className="font-sans font-bold text-xl sm:text-2xl lg:text-2xl xl:text-3xl tracking-wide text-champagne-light mt-1.5 lg:mt-2.5">
             Karachi Launch Ceremony 2026
           </p>
 
@@ -511,10 +511,10 @@ export default function InvitationEnvelope({
                   <span className="font-decorative text-[9px] sm:text-[10px] tracking-[0.26em] text-champagne-dark uppercase font-bold">
                     {EVENT_CONFIG.kicker}
                   </span>
-                  <h2 className="font-serif font-extrabold text-plum text-base sm:text-xl lg:text-2xl leading-tight mt-1">
+                  <h2 className="font-sans font-extrabold text-plum text-base sm:text-xl lg:text-2xl leading-tight mt-1">
                     {EVENT_CONFIG.title}
                   </h2>
-                  <p className="font-script text-royal text-xl sm:text-2xl lg:text-3xl leading-none mt-1">
+                  <p className="font-sans font-semibold text-royal text-xs sm:text-sm lg:text-base tracking-wide mt-1">
                     {EVENT_CONFIG.subtitle}
                   </p>
                   <div className="mt-2 h-[1px] w-16 bg-gradient-to-r from-transparent via-champagne to-transparent" />
