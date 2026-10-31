@@ -319,7 +319,7 @@ export default function DesktopInvitationView({
               </div>
 
               <span className="rounded-full border border-champagne/65 bg-lavender/55 px-3.5 py-1 font-decorative text-[10px] font-bold tracking-[0.22em] text-royal uppercase">
-                Karachi • 2026
+                Official Launch
               </span>
             </div>
 
@@ -357,10 +357,9 @@ export default function DesktopInvitationView({
                 <strong className="font-bold text-plum">
                   The Western Australia Education Network (WAEN)
                 </strong>{' '}
-                invites you to the Official Karachi Launch Ceremony of the
-                Western Australian Curriculum{' '}
+                invites you to the Official Karachi Launch Ceremony of the{' '}
                 <strong className="font-bold text-plum">
-                  (Kindergarten to Year 12)
+                  Western Australian Curriculum (Kindergarten to Year 12)
                 </strong>
                 , following successful launches in Islamabad and Lahore.
               </p>

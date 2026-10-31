@@ -235,13 +235,9 @@ export default function InvitationReveal({ isRevealed }) {
           className="my-5 sm:my-6 lg:my-7 flex items-center justify-center gap-3"
           aria-hidden="true"
         >
-          <span className="h-[1px] w-14 sm:w-24 lg:w-32 bg-gradient-to-r from-transparent to-champagne" />
-          <span className="inline-block h-2 w-2 rotate-45 border border-champagne bg-champagne/35" />
-          <span className="text-gold-shimmer font-decorative text-xs tracking-[0.26em] uppercase font-bold">
-            2026
-          </span>
-          <span className="inline-block h-2 w-2 rotate-45 border border-champagne bg-champagne/35" />
-          <span className="h-[1px] w-14 sm:w-24 lg:w-32 bg-gradient-to-l from-transparent to-champagne" />
+          <span className="h-[1px] w-16 sm:w-28 bg-gradient-to-r from-transparent to-champagne" />
+          <span className="inline-block h-2.5 w-2.5 rotate-45 border border-champagne bg-champagne/35" />
+          <span className="h-[1px] w-16 sm:w-28 bg-gradient-to-l from-transparent to-champagne" />
         </div>
 
         {/* Official Invitation Body Text (Stationary & Easy to Read) */}
@@ -253,10 +249,9 @@ export default function InvitationReveal({ isRevealed }) {
             <strong className="font-bold text-plum">
               The Western Australia Education Network (WAEN)
             </strong>{' '}
-            invites you to the Official Karachi Launch Ceremony of the Western
-            Australian Curriculum{' '}
+            invites you to the Official Karachi Launch Ceremony of the{' '}
             <strong className="font-bold text-plum">
-              (Kindergarten to Year 12)
+              Western Australian Curriculum (Kindergarten to Year 12)
             </strong>
             , following successful launches in Islamabad and Lahore.
           </p>

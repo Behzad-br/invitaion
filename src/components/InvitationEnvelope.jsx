@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { Calendar, MapPin, Sparkles } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import { EVENT_CONFIG } from '../config/eventConfig'
 
 export default function InvitationEnvelope({
@@ -419,37 +419,15 @@ export default function InvitationEnvelope({
         {/* Top Heading on Mobile | Left Editorial Welcome Column on Laptop */}
         <div
           ref={captionRef}
-          className="mt-2 sm:mt-4 lg:mt-0 flex flex-col items-center lg:items-start text-center lg:text-left px-2 lg:px-0 lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:self-end"
+          className="mt-3 sm:mt-5 lg:mt-0 flex flex-col items-center lg:items-start text-center lg:text-left px-2 lg:px-0 lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:self-end"
         >
-          <div className="flex items-center gap-2.5 sm:gap-4 mb-1 lg:mb-3">
-            <span className="h-[1px] w-7 sm:w-14 lg:hidden bg-gradient-to-r from-transparent to-champagne/85" />
-            <span className="hidden lg:inline-block h-2 w-2 rotate-45 border border-champagne bg-champagne/40" />
-            <span className="text-gold-shimmer font-decorative text-xs sm:text-sm lg:text-xs xl:text-sm font-bold tracking-[0.26em] uppercase">
-              {EVENT_CONFIG.envelopeCaption}
-            </span>
-            <span className="h-[1px] w-7 sm:w-14 lg:w-16 bg-gradient-to-l from-transparent to-champagne/85" />
-          </div>
-
-          {/* Laptop Editorial Headline */}
-          <h1 className="hidden lg:block font-serif font-extrabold text-4xl xl:text-5xl text-white leading-[1.14] tracking-tight">
-            {EVENT_CONFIG.title}
+          <h1 className="font-sans font-extrabold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl text-white leading-tight tracking-tight">
+            Western Australian Curriculum
           </h1>
 
-          <p className="font-sans font-bold text-xl sm:text-2xl lg:text-2xl xl:text-3xl tracking-wide text-champagne-light mt-1.5 lg:mt-2.5">
-            Karachi Launch Ceremony 2026
+          <p className="font-sans font-semibold text-base sm:text-xl lg:text-2xl tracking-wide text-champagne-light mt-1.5 lg:mt-2.5">
+            Karachi Launch Ceremony
           </p>
-
-          {/* Laptop Date & Venue Quick Summary */}
-          <div className="hidden lg:flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 pt-4 border-t border-champagne/25 text-xs xl:text-sm text-lavender/90">
-            <span className="inline-flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-champagne shrink-0" />
-              <span>{EVENT_CONFIG.dateDisplay}</span>
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-champagne shrink-0" />
-              <span>{EVENT_CONFIG.venueName}</span>
-            </span>
-          </div>
         </div>
 
         {/* Centerpiece Steady 3D Luxury Envelope (Middle on Mobile | Right Showcase Stage on Laptop) */}
