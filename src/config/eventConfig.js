@@ -18,8 +18,8 @@ export const EVENT_CONFIG = {
   isoEnd: '2026-11-12T13:00:00+05:00',
 
   // Venue
-  venueName: 'Governor Hall, Karachi',
-  venueAddress: 'Governor Hall, Karachi, Pakistan',
+  venueName: 'Karachi Marriott Hotel',
+  venueAddress: 'Karachi Marriott Hotel, Karachi, Pakistan',
   googleMapsUrl:
     'https://www.bing.com/maps/search?FORM=HDRSC6&q=karach+mariot+hotel&cp=24.845472%7E67.031601&lvl=11&style=r',
 
