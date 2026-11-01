@@ -498,31 +498,13 @@ export default function DesktopInvitationView({
           aria-label="VIP Attendance Concierge and Share Suite"
           className="col-span-5 rounded-[1.75rem] border border-champagne/70 bg-gradient-to-b from-[#2E0846]/95 via-[#3D0C5C]/95 to-[#230436]/95 backdrop-blur-md p-6 xl:p-7 shadow-[0_28px_70px_rgba(10,1,20,0.55)] flex flex-col justify-between gap-5"
         >
-          {/* Top Concierge Title Header */}
+          {/* Top RSVP Title Header */}
           <div>
-            <div className="flex items-center justify-between gap-3">
-              <div className="inline-flex items-center gap-2 rounded-full border border-champagne/55 bg-white/10 px-3.5 py-1">
-                <img
-                  src={EVENT_CONFIG.crestAssets.gold}
-                  alt=""
-                  className="h-4 w-4 object-contain"
-                />
-                <span className="font-decorative text-[10px] font-bold tracking-[0.22em] text-champagne-light uppercase">
-                  VIP Attendance Concierge
-                </span>
-              </div>
-
-              <span className="text-[11px] font-medium text-lavender/75">
-                Direct WhatsApp Confirmation
-              </span>
-            </div>
-
-            <h2 className="mt-3 font-serif text-2xl xl:text-[2rem] font-extrabold text-white leading-tight">
+            <h2 className="font-serif text-2xl xl:text-[2rem] font-extrabold text-white leading-tight">
               Reserve Your Presence
             </h2>
-            <p className="mt-1 font-sans text-xs xl:text-sm text-lavender/85 leading-relaxed">
-              Kindly enter your details below to confirm your institutional
-              attendance with the WAEN Pakistan team.
+            <p className="mt-1.5 font-sans text-xs xl:text-sm text-lavender/85 leading-relaxed">
+              Kindly confirm your participation by providing your details below.
             </p>
           </div>
 

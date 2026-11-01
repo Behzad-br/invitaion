@@ -199,12 +199,9 @@ export default function RSVPForm({
       >
         {!isDesktop && (
           <div className="text-center max-w-lg mx-auto">
-            <span className="inline-block text-gold-shimmer font-decorative text-[11px] sm:text-xs font-bold tracking-[0.26em] uppercase">
-              VIP Attendance Registration
-            </span>
             <h2
               id={headingId}
-              className="mt-1 font-serif text-3xl sm:text-4xl font-extrabold text-royal-shimmer"
+              className="font-serif text-3xl sm:text-4xl font-extrabold text-royal-shimmer"
             >
               Reserve Your Presence
             </h2>
